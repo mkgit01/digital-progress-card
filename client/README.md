@@ -1,6 +1,7 @@
 # [DIGITAL PROGRESS CARD]
+## Please update the md regularly. ##
 
-## DEVELOPERS:
+# DEVELOPERS:
 Minaketan Nayak
 Ankit Mishra
 Brahmanada Swain
