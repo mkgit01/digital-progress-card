@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{
+    --primary-color:cyan;
+    --accent-color:#e5fdff;
+    --opt-color:#02bdbd;
+}
+.logo-img{
+    height: 4rem;
+    width: 6rem;
+}
+.sidebar{
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: max-content;
+    min-width: 20%;
+    border-right: 1px black solid;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+    z-index: 99;
+}
+.sidebar.open{
+    transform: translateX(0%);
+}
+.side-bar-opt a{
+    width: 100%;
+    border: 1px grey solid;
+}
+.stats{
+    /* display:  flex;
+    flex-direction: row;
+    margin: auto;
+    width: 80%;
+    justify-content: space-evenly; */
+}
+.place-holder-stat{
+    position: relative;
+    height: 60vh;
+    margin: 2em 1em;
+    border: 2px solid var(--primary-color);
+}
+.filter{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    outline: solid 1px var(--primary-color);
+    background-color: var(--primary-color);
+}
+.progress-form{
+    margin: 2em auto;
+    background-color: azure;
+    min-width: 30%;
+    display: grid;
+    gap: 5px;
+}
+.progress-form input{
+    background-color: var(--accent-color);
+    color: #000000;
+    padding: 0.5em;
+
+}
+.progress-form button{
+    padding: 0.25em 0.5em;
+}
+.rewardProg{
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--primary-color);
+    height: 60vh;
+    min-width: max-content;
+    background-color: var(--accent-color);
+}
+.reward{
+    display: grid;
+    place-items: center;
+    justify-content: center;
+    grid-auto-flow: column;
+    gap: 1em;
+}
+.reward-check{
+    width: 2em;
+    aspect-ratio: 1;
+    background-color: #dcdcdc;
+    border-radius: 100vw;
+}
+.reward h1{
+    font-size: 1em;
+}
+.rewardProg a{
+ color: var(--opt-color);
+}
