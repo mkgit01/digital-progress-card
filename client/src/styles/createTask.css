@@ -1,0 +1,160 @@
+:root{
+    --primary: #7700ff;
+    --secondry:#dedae7;
+    --light:white;
+
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--secondry);
+    margin-left: 25%;
+    margin-right: 25%;
+
+}
+
+.container {
+    display: flex;
+    background-color: var(--light);
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+h3{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.section-label {
+    font-size: 24px;
+    font-weight: bold;
+    left: 0;
+    
+}
+.task-input-name{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: var(--primary);
+    gap: 10px;
+}
+.task-input-name input{
+    padding: 20px;
+    border: solid 0.5px var(--secondry);
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.task-input-field {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    color: var(--primary);
+    
+}
+.target-input{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+.unit-input{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.task-input-field input,
+.task-input-field select {
+    padding: 20px;
+    border: solid 0.5px var(--secondry);
+    border-radius: 5px;
+    font-size: 16px;
+}
+select option {
+    font-size: 16px; /* Increase font size */
+    padding: 10px; /* Increase padding */
+}
+
+.reward-input-field {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.reward-input-field input,
+.reward-input-field select {
+    width: calc(50% - 7.5px);
+    padding: 10px;
+    border: solid 0.5px var(--secondry);
+    border-radius: 5px;
+}
+
+.btn {
+    background-color: var(--primary);
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100px;
+    color: var(--light);
+}
+
+.add-reward-btn {
+    flex: 1;
+    margin-top: auto;
+    width: 100%;
+    height: 60px;
+
+}
+
+.create-task-btn {
+    width: 200px;
+    margin-top: auto;
+    height: 60px;
+    display: block;
+    margin: 0 auto;
+
+}
+
+.additional-input {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start; /* Align items at the start of the cross axis */
+    width: 100%;
+    margin-bottom: 10px;
+}
+.additional-input input,
+.additional-input textarea {
+    padding: 20px;
+    border: solid 0.5px var(--secondry);
+    border-radius: 5px;
+    font-size: 16px;
+    flex: 1; /* Take up equal space */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    height: 100%;
+}
+
+.comment-input {
+    flex: 1; /* Take up all available space */
+}
+
+.image-input {
+    flex: 1; /* Take up all available space */
+}
+
+input[type="file"].image-input {
+    border: 2px dotted var(--secondry); /* Apply a 2px dotted border with a light gray color */
+    color: var(--primary);
+}
+
+
