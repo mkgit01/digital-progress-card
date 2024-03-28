@@ -2,11 +2,12 @@ import Dashboard from './components/Dashboard'
 import Footer from './components/Footer'
 
 import './styles/index.css'
+import Header from './components/Header'
 
 function App() {
   return (
     <>
-      <div className='logo-holder grid place-items-center bg-cyan-200 h-16 mb-1'><a href="#"><img className='logo-img' src="/media/images/logo.png" alt="logo" /></a></div>
+      <Header />
       <Dashboard />
       <Footer />
     </>
