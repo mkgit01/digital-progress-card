@@ -8,16 +8,17 @@
 body {
     font-family: Arial, sans-serif;
     background-color: var(--light);
-    margin-left: 25%;
-    margin-right: 25%;
-
 }
 
 .container {
     display: flex;
     background-color: var(--light);
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
+    /* border-radius: 10px; */
+    border: 1px solid var(--primary);
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 h3{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -77,10 +78,11 @@ h3{
     border: solid 0.5px var(--secondry);
     border-radius: 5px;
     font-size: 16px;
+    height: 60px;
 }
 select option {
-    font-size: 16px; /* Increase font size */
-    padding: 10px; /* Increase padding */
+    font-size: 16px;
+    padding: 10px;
 }
 
 .reward-input-field {
@@ -129,7 +131,7 @@ select option {
 .additional-input {
     display: flex;
     gap: 15px;
-    align-items: flex-start; /* Align items at the start of the cross axis */
+    align-items: flex-start; 
     width: 100%;
     margin-bottom: 10px;
 }
@@ -139,22 +141,29 @@ select option {
     border: solid 0.5px var(--secondry);
     border-radius: 5px;
     font-size: 16px;
-    flex: 1; /* Take up equal space */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    flex: 1; 
+    box-sizing: border-box; 
     height: 100%;
 }
 
 .comment-input {
-    flex: 1; /* Take up all available space */
+    flex: 1; 
 }
 
 .image-input {
-    flex: 1; /* Take up all available space */
+    flex: 1; 
 }
 
 input[type="file"].image-input {
-    border: 2px dotted var(--secondry); /* Apply a 2px dotted border with a light gray color */
+    border: 2px dotted var(--secondry); 
     color: var(--primary);
 }
 
+
+
+@media screen and (max-width:730px) {
+    .task-input-field{
+        flex-direction: column;
+    }
+  }
 
