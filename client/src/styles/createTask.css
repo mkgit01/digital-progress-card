@@ -1,13 +1,13 @@
 :root{
-    --primary: #7700ff;
-    --secondry:#dedae7;
+    --primary: #086788;
+    --secondry:#003249;
     --light:white;
 
 }
 
 body {
     font-family: Arial, sans-serif;
-    background-color: var(--secondry);
+    background-color: var(--light);
     margin-left: 25%;
     margin-right: 25%;
 

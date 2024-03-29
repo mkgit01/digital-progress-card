@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 :root{
-    --primary-color:cyan;
-    --accent-color:#e5fdff;
-    --opt-color:#02bdbd;
+    --primary-color:#c9184a;
+    --accent-color:#ffccd5;
+    --opt-color:#590d22;
 }
 .logo-img{
     height: 4rem;
