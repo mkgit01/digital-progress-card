@@ -10,8 +10,8 @@ function App() {
     <>
       <Header />
       <Dashboard />
-      <Footer />
       {/* <CreateTask /> */}
+      <Footer />
     </>
   )
 }
