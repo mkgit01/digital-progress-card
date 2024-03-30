@@ -1,21 +1,6 @@
-:root{
-    --primary: #52b788;
-    --secondry:#1b4332;
-    --light:white;
-
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: var(--light);
-}
-
 .container {
     display: flex;
-    background-color: var(--light);
-    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
-    /* border-radius: 10px; */
-    border: 1px solid var(--primary);
+    border: 2px solid var(--primary-color);
     margin: auto;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -42,12 +27,11 @@ h3{
     display: flex;
     flex-direction: column;
     width: 100%;
-    color: var(--primary);
     gap: 10px;
 }
 .task-input-name input{
     padding: 20px;
-    border: solid 0.5px var(--secondry);
+    border: solid 0.5px var(--secondry-color);
     border-radius: 5px;
     font-size: 16px;
 }
@@ -56,7 +40,6 @@ h3{
     display: flex;
     flex-direction: row;
     gap: 20px;
-    color: var(--primary);
     
 }
 .target-input{
@@ -75,7 +58,7 @@ h3{
 .task-input-field input,
 .task-input-field select {
     padding: 20px;
-    border: solid 0.5px var(--secondry);
+    border: solid 0.5px var(--secondry-color);
     border-radius: 5px;
     font-size: 16px;
     height: 60px;
@@ -97,18 +80,21 @@ select option {
 .reward-input-field select {
     width: calc(50% - 7.5px);
     padding: 10px;
-    border: solid 0.5px var(--secondry);
+    border: solid 0.5px var(--secondry-color);
     border-radius: 5px;
 }
 
 .btn {
-    background-color: var(--primary);
+    background-color: var(--primary-color);
     padding: 10px 20px;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
     width: 100px;
-    color: var(--light);
+    color: var(--light-text);
+    transition: all ease 300ms;
+}
+.btn:hover{
+    background-color: var(--hover-color);
 }
 
 .add-reward-btn {
@@ -138,7 +124,7 @@ select option {
 .additional-input input,
 .additional-input textarea {
     padding: 20px;
-    border: solid 0.5px var(--secondry);
+    border: solid 0.5px var(--secondry-color);
     border-radius: 5px;
     font-size: 16px;
     flex: 1; 
@@ -155,8 +141,7 @@ select option {
 }
 
 input[type="file"].image-input {
-    border: 2px dotted var(--secondry); 
-    color: var(--primary);
+    border: 2px dotted var(--secondry-color); 
 }
 
 

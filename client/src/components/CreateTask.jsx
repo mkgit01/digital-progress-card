@@ -44,7 +44,7 @@ function CreateTask() {
             </select>
           </div>
           <button className="btn add-reward-btn" onClick={addReward}>
-            ADD REWARD
+            Add Reward
           </button>
         </div>
         <div id="reward-container">
@@ -82,7 +82,7 @@ function CreateTask() {
           <input type="file" className="image-input" accept="image/*" />
         </div>
 
-        <button className="btn create-task-btn">CREATE TASK</button>
+        <button className="btn create-task-btn">Create Task</button>
       </div>
     </div>
   );
