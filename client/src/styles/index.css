@@ -2,10 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 :root{
-    --primary-color:cyan;
-    --accent-color:#e5fdff;
-    --opt-color:#02bdbd;
-    --hover-color:rgb(153, 255, 255);
+    --primary-color:#52b788;
+    --accent-color:#95d5b2;
+    --opt-color:#1b4332;
+    --hover-color:#b7e4c7;
+    --secondry-color:#1b4332;
+    --light-text: black;
 }
 .logo-img{
     height: 4rem;
@@ -43,7 +45,7 @@
 }
 .add-tsk:hover{
     background-color: var(--hover-color);
-    color: white;
+    color: black;
 }
 .header{
     background-color: var(--primary-color);
