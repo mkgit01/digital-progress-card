@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/createTask.css";
+import "../../styles/createTask.css";
 
 function CreateTask() {
   const [rewards, setRewards] = useState([]);
