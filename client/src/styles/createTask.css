@@ -156,5 +156,3 @@ input[type="file"].image-input {
     border: 2px dotted var(--secondry); /* Apply a 2px dotted border with a light gray color */
     color: var(--primary);
 }
-
-
