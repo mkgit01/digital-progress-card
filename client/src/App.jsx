@@ -6,8 +6,10 @@ import './styles/index.css'
 function App() {
   return (
     <>
+    <div className='full-page'>
       <Header />
       <Dashboard />
+        </div>
       <Footer />
     </>
   )

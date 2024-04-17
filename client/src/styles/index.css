@@ -9,6 +9,11 @@
     --secondry-color:#1b4332;
     --light-text: black;
 }
+
+.full-page{
+    min-height: calc(100vh - 3rem);
+}
+
 .logo-img{
     height: 4rem;
     width: 6rem;
@@ -116,4 +121,7 @@
 }
 .ftr{
     background-color: var(--primary-color);
+    position: relative;
+    left: 0;
+    bottom: 0;
 }
