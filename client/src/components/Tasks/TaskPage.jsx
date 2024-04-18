@@ -1,8 +1,7 @@
-// TaskPage.js
 import React, { useState } from 'react';
 
 import AddTask from './AddTask';
-import '../styles/taskPage.css';
+import '../../styles/taskPage.css';
 
 const TaskPage = () => {
   const [tasks, setTasks] = useState([]);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/taskPage.css';
+import '../../styles/taskPage.css';
 
 const AddTask = ({ onAdd }) => {
   const [taskInput, setTaskInput] = useState('');
