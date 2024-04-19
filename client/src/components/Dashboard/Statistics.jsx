@@ -1,12 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Statistics = () => {
   return (
     <div className='place-holder-stat sm:col-span-2 sm:w-4/5 w-11/12 grid place-items-center'>
       <div className='select-none grid place-items-center text-center'>
-      <a href="./CreateTask.jsx">
+      <Link to="/create-task">
         <div className="add-tsk rounded-full grid place-items-center text-3xl">+</div>
-        </a>
+        </Link>
         Enter tasks to access
         </div>
         <select className='filter' name="filter" id="sort">

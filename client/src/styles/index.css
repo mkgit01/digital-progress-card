@@ -34,6 +34,9 @@
 .sidebar.open{
     transform: translateX(0%);
 }
+.navActive{
+    background-color: var(--hover-color);
+}
 .side-bar-opt a{
     width: 100%;
     border: 1px grey solid;
@@ -124,4 +127,18 @@
     position: relative;
     left: 0;
     bottom: 0;
+}
+.invalid-page{
+    gap: 2em;
+}
+.invalid-page h1{
+    font-size: 3em;
+}
+.invalid-page a{
+    color: var(--light-text);
+    padding: 0.25em 0.5em;
+    background-color: var(--primary-color);
+}
+.invalid-page a:hover{
+    background-color: var(--hover-color);
 }

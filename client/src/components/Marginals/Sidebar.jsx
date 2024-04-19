@@ -14,7 +14,7 @@ const Sidebar = () => {
     <section className={`sidebar ${sidebarOn?'open':''}`}>
         <img onClick={toggleSidebar} className='absolute top-0 right-0 cursor-pointer' width="48" height="48" src="https://img.icons8.com/sf-regular-filled/48/1A1A1A/x.png" alt="x"/>
         <UserProfile />
-        <SidebarOptions />
+        <SidebarOptions toggleSidebar={toggleSidebar}/>
     </section>
     </>
   )
