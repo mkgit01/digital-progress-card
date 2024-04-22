@@ -117,3 +117,18 @@
 .ftr{
     background-color: var(--primary-color);
 }
+.block{
+    height: 40vh;
+}
+.btn {
+    background-color: var(--primary-color);
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    color: var(--light-text);
+    transition: all ease 300ms;
+}
+.btn:hover{
+    background-color: var(--hover-color);
+}
+

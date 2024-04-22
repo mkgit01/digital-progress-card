@@ -1,10 +1,6 @@
 .container {
     display: flex;
-    border: 2px solid var(--primary-color);
     margin: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    
 }
 h3{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,6 +12,7 @@ h3{
     flex-direction: column;
     gap: 20px;
     width: 100%;
+    
 }
 
 .section-label {
@@ -90,7 +87,6 @@ select option {
     padding: 10px 20px;
     border: none;
     cursor: pointer;
-    width: 100px;
     color: var(--light-text);
     transition: all ease 300ms;
 }
@@ -106,14 +102,12 @@ select option {
 
 }
 
-.create-task-btn {
-    width: 200px;
+/* .create-task-btn {
     margin-top: auto;
     height: 60px;
-    display: block;
-    margin: 0 auto;
+    margin: 0 auto; 
 
-}
+} */
 
 .additional-input {
     display: flex;

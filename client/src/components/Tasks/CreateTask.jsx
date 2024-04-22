@@ -15,10 +15,11 @@ function CreateTask() {
   };
 
   return (
-    <div className="container">
+    <div className="bg-gray-200 h-screen flex justify-center items-center">
+    <div className="container rounded-lg bg-white">
       <div className="main-section">
         <div className="section-label">
-          <h3>Create Task</h3>
+          <h3>CREATE TASK</h3>
         </div>
 
         <div className="task-input-name">
@@ -43,7 +44,7 @@ function CreateTask() {
               <option value="min">Minutes (min)</option>
             </select>
           </div>
-          <button className="btn add-reward-btn" onClick={addReward}>
+          <button className="btn add-reward-btn rounded" onClick={addReward}>
             Add Reward
           </button>
         </div>
@@ -82,8 +83,9 @@ function CreateTask() {
           <input type="file" className="image-input" accept="image/*" />
         </div>
 
-        <button className="btn create-task-btn">Create Task</button>
+        <button className="btn rounded mt-0 mb-0 mr-auto ml-auto w-auto" >Create</button>
       </div>
+    </div>
     </div>
   );
 }
