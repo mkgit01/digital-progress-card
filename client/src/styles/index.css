@@ -9,6 +9,11 @@
     --secondry-color:#1b4332;
     --light-text: black;
 }
+
+.full-page{
+    min-height: calc(100vh - 3rem);
+}
+
 .logo-img{
     height: 4rem;
     width: 6rem;
@@ -28,6 +33,9 @@
 }
 .sidebar.open{
     transform: translateX(0%);
+}
+.navActive{
+    background-color: var(--hover-color);
 }
 .side-bar-opt a{
     width: 100%;
@@ -116,19 +124,21 @@
 }
 .ftr{
     background-color: var(--primary-color);
+    position: relative;
+    left: 0;
+    bottom: 0;
 }
-.block{
-    height: 40vh;
+.invalid-page{
+    gap: 2em;
 }
-.btn {
-    background-color: var(--primary-color);
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
+.invalid-page h1{
+    font-size: 3em;
+}
+.invalid-page a{
     color: var(--light-text);
-    transition: all ease 300ms;
+    padding: 0.25em 0.5em;
+    background-color: var(--primary-color);
 }
-.btn:hover{
+.invalid-page a:hover{
     background-color: var(--hover-color);
 }
-
