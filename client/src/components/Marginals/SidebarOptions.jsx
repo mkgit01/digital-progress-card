@@ -6,7 +6,8 @@ const SidebarOptions = (props) => {
     <div className='side-bar-opt grid place-items-center'>
     <NavLink to="/" 
     className={({isActive})=>`${isActive ? "navActive" : ""}`}
-    onClick={props.toggleSidebar}>
+    onClick={props.toggleSidebar}
+    >
       <div className='p-3 text-center text-lg'>
         Home
         </div>
