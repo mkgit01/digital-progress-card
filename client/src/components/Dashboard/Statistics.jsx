@@ -10,8 +10,8 @@ const Statistics = () => {
         </Link>
         Enter tasks to access
         </div>
-        <select className='filter' name="filter" id="sort">
-          <option value="weekly" selected>Weekly</option>
+        <select defaultValue={"weekly"} className='filter' name="filter" id="sort">
+          <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
           <option value="yearly">Yearly</option>
         </select>

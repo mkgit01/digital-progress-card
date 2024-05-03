@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import UserProfile from "../Marginals/UserProfile";
+import "../../styles/settings.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faFloppyDisk, faPenToSquare, faRepeat, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
@@ -112,7 +113,7 @@ const Profile = () => {
               <button
                 onClick={handleChangePassword}
                 className="text-blue-600"
-              >Chnage Password 
+              >Change Password 
               </button>
             </p>
             )}
@@ -155,7 +156,7 @@ const Profile = () => {
               type="text"
               value={about}
               onChange={handleAboutChange}
-              className="px-2 py-1 border rounded m-4 h-40 w-96 hidden"
+              className="editAbout px-2 py-1 border rounded m-4 h-40"
             />
             <button
               onClick={handleSave}
@@ -179,9 +180,7 @@ const Profile = () => {
                 <p className="">
                   <strong>Age:</strong> {age}
                 </p>
-                <p className=" hidden sm:block">
-                  <strong>About:</strong> {about}
-                </p>
+
               </div>
               <div className="right-0 mt-4 md:mt-0 relative">
                 <button
@@ -191,6 +190,9 @@ const Profile = () => {
                   <FontAwesomeIcon icon={faPenToSquare} />{" "}
                 </button>
               </div>
+            </div>
+            <div className="p-4">
+                  <strong>About:</strong> {about}
             </div>
           </>
         )}

@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import {RouterProvider, createBrowserRouter, createRoutesFromElements, Route} from 'react-router-dom'
 import Layout from './components/Layout'
+import Login from './components/Auth/Login'
 import Dashboard from './components/Dashboard/Dashboard'
 import TaskPage from './components/Tasks/TaskPage'
 import CreateTask from './components/Tasks/CreateTask'
@@ -10,8 +11,14 @@ import Profile from './components/Profile/Profile'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
+    // <Route path='/' element={loggedIn ? (
+    //   <Layout />
+    // ) : (
+    //   <Login />
+    // )}>
     <Route path='/' element={<Layout />}>
       <Route path='' element={<Dashboard />}/>
+      <Route path='login' element={<Login />}/>
       <Route path='task' element={<TaskPage />}/>
       <Route path='create-task' element={<CreateTask />}/>
       <Route path='profile' element={<Profile />}/>

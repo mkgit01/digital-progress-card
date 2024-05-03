@@ -6,17 +6,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* styles.css */
-:root {
-  --primary-color: #52b788;
-  --accent-color: #95d5b2;
-  --opt-color: #1b4332;
-  --hover-color: #b7e4c7;
-  --text-color: #000000 --primary-font: 'Rubik', sans-serif;
-  --secondary-font: 'Roboto', sans-serif;
-  --third-font: 'Ubuntu', sans-serif;
-}
-
 /* AddTask */
 .add-task-container {
   font-family: var(--third-font);
@@ -28,6 +17,7 @@
 
 .add-task-button {
   background-color: var(--primary-color);
+  color: var(--light-text);
 }
 
 /* TaskPage */
@@ -44,7 +34,7 @@
   font-family: var(--secondary-font);
   font-size: 1.5em;
   background-color: var(--primary-color);
-  color: #000;
+  color: var(--light-text);
   border-radius: 4px;
   box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.18),
     0px 4px 6px -4px rgba(0, 0, 0, 0.1);
