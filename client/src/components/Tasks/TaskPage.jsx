@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { FilePenLine,Trash2 } from 'lucide-react';
 import AddTask from './AddTask';
 import '../../styles/taskPage.css';
 
@@ -41,8 +41,8 @@ const TaskPage = () => {
               <li key={index} className="task-item flex flex-auto p-4 justify-between">
                 <span>{task}</span>
                 <div className='task-buttons flex flex-row'>
-                  <button onClick={() => handleEditTask(index)} className='mr-4'><img src='/media/images/edit.png' alt='Edit' className='size-10'/></button>
-                  <button onClick={() => handleDeleteTask(index)}><img src='/media/images/delete.png' alt='Delete' className='size-10'/></button>
+                  <button onClick={() => handleEditTask(index)} className='mr-4'><FilePenLine /></button>
+                  <button onClick={() => handleDeleteTask(index)}><Trash2 /></button>
                 </div>
               </li>
               </div>
