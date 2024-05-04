@@ -11,11 +11,6 @@ import Profile from './components/Profile/Profile'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    // <Route path='/' element={loggedIn ? (
-    //   <Layout />
-    // ) : (
-    //   <Login />
-    // )}>
     <Route path='/' element={<Layout />}>
       <Route path='' element={<Dashboard />}/>
       <Route path='login' element={<Login />}/>

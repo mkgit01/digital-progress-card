@@ -7,7 +7,9 @@ import Login from './Auth/Login'
 
 function Layout() {
   const [loggedIn, setLoggedIn] = useState(false)
-
+  const setLogin= () =>{
+    setLoggedIn((login)=>!login)
+  }
   return (
     <>
     {loggedIn?
@@ -19,7 +21,7 @@ function Layout() {
       <Footer />
       </>
       :
-      <Login />
+      <Login setLogin={setLogin}/>
       }
     </>
   )
