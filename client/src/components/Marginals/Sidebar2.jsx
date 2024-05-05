@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import UserProfile from './UserProfile'
 
 const Sidebar2 = () => {
-    const [sidebarOn,setSidebarOn] = useState(true)
+    const [sidebarOn,setSidebarOn] = useState(false)
     const toggleSidebar= ()=>{
       setSidebarOn((lastState)=>!lastState)
     }
