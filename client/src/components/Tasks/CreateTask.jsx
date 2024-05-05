@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "../../styles/createTask.css";
 
 function CreateTask() {
@@ -15,7 +16,7 @@ function CreateTask() {
   };
 
   return (
-    <div className="container">
+    <div className="container shadow-lg rounded-lg">
       <div className="main-section">
         <div className="section-label">
           <h3>Create Task</h3>
@@ -43,7 +44,7 @@ function CreateTask() {
               <option value="min">Minutes (min)</option>
             </select>
           </div>
-          <button className="btn add-reward-btn" onClick={addReward}>
+          <button className="btn add-reward-btn rounded-md" onClick={addReward}>
             Add Reward
           </button>
         </div>
@@ -81,8 +82,14 @@ function CreateTask() {
           <textarea className="comment-input" placeholder="Enter your comment"></textarea>
           <input type="file" className="image-input" accept="image/*" />
         </div>
-
-        <button className="btn create-task-btn">Create Task</button>
+        <div className="task-btn-wrapper flex flex-row justify-evenly m-auto gap-4">
+          <Link to='/task'>
+        <button className="btn cancel-task-btn rounded-md">Cancel</button>
+        </Link>
+          <Link to='/task'>
+        <button className="btn create-task-btn rounded-md">Create Task</button>
+        </Link>
+        </div>
       </div>
     </div>
   );

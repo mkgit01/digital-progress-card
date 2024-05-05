@@ -1,10 +1,11 @@
 .container {
     display: flex;
-    border: 2px solid var(--primary-color);
     margin: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60%;
 }
 h3{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -87,10 +88,10 @@ select option {
 
 .btn {
     background-color: var(--primary-color);
-    padding: 10px 20px;
+    padding: 1em 2em;
     border: none;
     cursor: pointer;
-    width: 100px;
+    /* width: 100px; */
     color: var(--light-text);
     transition: all ease 300ms;
 }
@@ -106,13 +107,8 @@ select option {
 
 }
 
-.create-task-btn {
-    width: 200px;
-    margin-top: auto;
-    height: 60px;
-    display: block;
-    margin: 0 auto;
-
+.task-btn-wrapper{
+    min-width: 30%;
 }
 
 .additional-input {
