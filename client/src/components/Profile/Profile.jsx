@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import UserProfile from "../Marginals/UserProfile";
 import "../../styles/settings.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faFloppyDisk, faPenToSquare, faRepeat, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import {  faFloppyDisk, faPenToSquare, faRepeat, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 const Profile = () => {
   const [address, setAddress] = useState("Puri, Odisha, India");
