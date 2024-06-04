@@ -8,6 +8,9 @@ import TaskPage from './components/Tasks/TaskPage'
 import CreateTask from './components/Tasks/CreateTask'
 import InvalidPage from './components/InvalidPage'
 import Profile from './components/Profile/Profile'
+import Settings from './components/Settings/Settings'
+import Account from './components/Settings/Account'
+import Personalize from './components/Settings/Personalize'
 import Rewards from './components/Tasks/Rewards'
 
 const router = createBrowserRouter(
@@ -19,9 +22,11 @@ const router = createBrowserRouter(
       <Route path='create-task' element={<CreateTask />}/>
       <Route path='rewards' element={<Rewards />}/>
       <Route path='profile' element={<Profile />}/>
+      <Route path='settings' element={<Settings />}/>
+      <Route path='settings/account' element={<Account />}/>
+      <Route path='settings/personalize' element={<Personalize />}/>
       <Route path='*' element={<InvalidPage />}/>
     </Route>
-
 ))
 
 ReactDOM.createRoot(document.getElementById('root')).render(
