@@ -8,7 +8,7 @@ const Header = () => {
     <>
     {/* <Sidebar /> */}
     <Sidebar2 />
-    <div className='header logo-holder grid place-items-center h-16 mb-1'>
+    <div className='header logo-holder grid place-items-center h-16 mb-1 top-0'>
         <Link to="/">
         <img className='logo-img object-cover' src="/media/images/dpc-logo.png" alt="logo" />
         </Link>
