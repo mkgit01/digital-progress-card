@@ -8,6 +8,7 @@ import TaskPage from './components/Tasks/TaskPage'
 import CreateTask from './components/Tasks/CreateTask'
 import InvalidPage from './components/InvalidPage'
 import Profile from './components/Profile/Profile'
+import Rewards from './components/Tasks/Rewards'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -16,6 +17,7 @@ const router = createBrowserRouter(
       <Route path='login' element={<Login />}/>
       <Route path='task' element={<TaskPage />}/>
       <Route path='create-task' element={<CreateTask />}/>
+      <Route path='rewards' element={<Rewards />}/>
       <Route path='profile' element={<Profile />}/>
       <Route path='*' element={<InvalidPage />}/>
     </Route>
