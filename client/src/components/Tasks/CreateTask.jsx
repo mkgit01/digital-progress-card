@@ -84,11 +84,11 @@ function CreateTask() {
         </div>
         <div className="task-btn-wrapper flex flex-row justify-evenly m-auto gap-4">
           <Link to='/task'>
-        <button className="btn cancel-task-btn rounded-md">Cancel</button>
-        </Link>
+            <button className="btn cancel-task-btn rounded-md">Cancel</button>
+          </Link>
           <Link to='/task'>
-        <button className="btn create-task-btn rounded-md">Create Task</button>
-        </Link>
+            <button className="btn create-task-btn rounded-md">Create Task</button>
+          </Link>
         </div>
       </div>
     </div>
