@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/createTask.css";
 
 function CreateTask() {
   const [rewards, setRewards] = useState([]);
+  const [target, setTarget] = useState("");  // New state for target value
 
   const addReward = () => {
     setRewards([...rewards, { unit: "select", name: "" }]);
@@ -13,6 +14,13 @@ function CreateTask() {
     const updatedRewards = [...rewards];
     updatedRewards[index][field] = value;
     setRewards(updatedRewards);
+  };
+
+  const handleTargetChange = (e) => {
+    const value = e.target.value;
+    if (value === "" || (!isNaN(value) && Number(value) >= 1)) {
+      setTarget(value);
+    }
   };
 
   return (
@@ -30,7 +38,14 @@ function CreateTask() {
         <div className="task-input-field">
           <div className="target-input">
             <label htmlFor="task-target">Target</label>
-            <input type="number" id="task-target" placeholder="Like 1,2,3..." required />
+            <input
+              type="number"
+              id="task-target"
+              placeholder="Like 1,2,3..."
+              value={target}
+              onChange={handleTargetChange}  // Added validation
+              required
+            />
           </div>
           <div className="unit-input">
             <label htmlFor="task-unit">Unit</label>
