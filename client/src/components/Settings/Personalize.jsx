@@ -138,7 +138,6 @@ import React, { useEffect, useState } from "react";
 import Settings from "./Settings";
 import { Check } from "lucide-react";
 import useLocalStorage from "use-local-storage";
-import "../../styles/personalize.css";
 import { NavLink } from "react-router-dom";
 
 const themes = {
@@ -152,24 +151,11 @@ const themes = {
 
 const Personalize = () => {
   const [theme, setTheme] = useLocalStorage("theme", "default");
-  const [mode, setMode] = useState(localStorage.getItem("mode") || "light");
 
   const handleThemeChange = (selectedTheme) => {
     setTheme(selectedTheme);
     localStorage.setItem("theme", selectedTheme);
   };
-
-  const toggleMode = () => {
-    setMode((prevMode) => {
-      const newMode = prevMode === "dark" ? "light" : "dark";
-      localStorage.setItem("mode", newMode);
-      return newMode;
-    });
-  };
-
-  useEffect(() => {
-    document.body.className = mode;
-  }, [mode]);
 
   useEffect(() => {
     document.body.id = theme;
@@ -178,42 +164,18 @@ const Personalize = () => {
   return (
     <div className="flex">
       <div className="hidden sm:block w-auto">
-
-      <Settings />
+        <Settings />
       </div>
 
       <div className="w-3/4 p-4">
         {/* ----------------------------------Dark/Light Mode Toggle------------------------------------------- */}
-        <div className="mb-5">
-          <label className="block mb-2">
-            <strong>Mode:</strong>
-          </label>
-          <div className="flex gap-3 m-auto">
-            <span className="font-semibold ">Light</span>
-            <div className="relative inline-block w-10 mt-1 align-middle select-none transition duration-200 ease-in">
-              <input
-                type="checkbox"
-                name="toggle"
-                id="toggle"
-                className="toggle-checkbox absolute block w-6 h-6 rounded-full appearance-none cursor-pointer"
-                checked={mode === "dark"}
-                onChange={toggleMode}
-              />
-              <label
-                htmlFor="toggle"
-                className="toggle-label block overflow-hidden h-6 rounded-full  cursor-pointer"
-              ></label>
-            </div>
-            <span className="font-semibold">Dark</span>
-          </div>
-        </div>
 
         {/* ------------------------------------------------Color Themes------------------------------------------------ */}
         <div className="mb-4">
           <label className="block mb-2">
             <strong>Theme:</strong>
           </label>
-          <div className="grid sm:flex gap-2 "> 
+          <div className="grid sm:flex gap-2 ">
             {Object.keys(themes).map((key) => (
               <button
                 key={key}
@@ -235,10 +197,9 @@ const Personalize = () => {
           className="sm:hidden flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
         >
           <h2 className="text-xl font-semibold mb-2">Go Back</h2>
-          
         </NavLink>
       </div>
-     </div>
+    </div>
   );
 };
 
