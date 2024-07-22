@@ -16,6 +16,7 @@ function CreateTask() {
   };
 
   return (
+    <div className="create-task-wrapper">
     <div className="container shadow-lg rounded-lg">
       <div className="main-section">
         <div className="section-label">
@@ -91,6 +92,7 @@ function CreateTask() {
         </Link>
         </div>
       </div>
+    </div>
     </div>
   );
 }
