@@ -1,20 +1,58 @@
-import React from 'react'
-import Sidebar from './Sidebar'
-import { Link } from 'react-router-dom'
-import Sidebar2 from './Sidebar2'
+import React from "react";
+import Sidebar2 from "./Sidebar2";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import "../../styles/toggleMode.css";
 
 const Header = () => {
+  const [mode, setMode] = useState(localStorage.getItem("mode") || "light");
+
+  const toggleMode = () => {
+    setMode((prevMode) => {
+      const newMode = prevMode === "dark" ? "light" : "dark";
+      localStorage.setItem("mode", newMode);
+      return newMode;
+    });
+  };
+
+  useEffect(() => {
+    document.body.className = mode;
+  }, [mode]);
+
   return (
     <>
-    {/* <Sidebar /> */}
-    <Sidebar2 />
-    <div className='header logo-holder grid place-items-center h-16 mb-1 top-0'>
-        <Link to="/">
-        <img className='logo-img object-cover' src="/media/images/dpc-logo.png" alt="logo" />
-        </Link>
-    </div>
-    </>
-  )
-}
+      {/* <Sidebar /> */}
+      <Sidebar2 />
 
-export default Header
+      <div className="header flex items-center justify-between h-16 px-4 mb-1 top-0">
+        <div className="logo-holder m-auto">
+          <Link to="/">
+            <img
+              className="logo-img object-cover"
+              src="/media/images/dpc-logo.png"
+              alt="logo"
+            />
+          </Link>
+        </div>
+
+        {/* dark and light mode toggle */}
+          <div className="relative inline-block align-middle select-none transition duration-200 ease-in">
+            <input
+              type="checkbox"
+              name="toggle"
+              id="toggle"
+              className="toggle-checkbox absolute block rounded-full appearance-none cursor-pointer"
+              checked={mode === "dark"}
+              onChange={toggleMode}
+            />
+            <label
+              htmlFor="toggle"
+              className="toggle-label block overflow-hidden rounded-full cursor-pointer"
+            ></label>
+          </div>
+      </div>
+    </>
+  );
+};
+
+export default Header;

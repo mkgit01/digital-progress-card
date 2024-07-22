@@ -106,7 +106,7 @@ const Account = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <div className="hidden sm:block w-auto">
         <Settings />
       </div>
