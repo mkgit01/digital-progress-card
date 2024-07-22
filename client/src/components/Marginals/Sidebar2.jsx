@@ -47,7 +47,7 @@ const Sidebar2 = () => {
           <NavLink
            onClick={toggleSidebar}
             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-            to="settings"
+            to="/settings/account"
           >
             {/* <BellRing className="h-5 w-5" aria-hidden="true" />  */}
             <Wrench className="h-5 w-5" aria-hidden="true" />

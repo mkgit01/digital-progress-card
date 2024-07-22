@@ -14,7 +14,7 @@ function Layout() {
     <>
     {loggedIn?
     <>
-    <div className='full-page' id="default">
+    <div className='full-page light'>
       <Header />
       <Outlet />
         </div>
