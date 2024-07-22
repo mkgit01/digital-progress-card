@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BarChart, Wallet, Medal, Brush, Wrench, LogOut, Headset } from 'lucide-react'
+import { BarChart, Wallet, Medal, Brush, Wrench, LogOut, Headset, BellRing } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import UserProfile from './UserProfile'
 
@@ -44,27 +44,21 @@ const Sidebar2 = () => {
             <Medal className="h-5 w-5" aria-hidden="true" />
             <span className="mx-2 text-sm font-medium">Rewards</span>
           </NavLink>
-        </div>
-        <div className="space-y-3 ">
-          <label className="px-3 text-xs font-semibold uppercase text-gray-900">Settings</label>
           <NavLink
            onClick={toggleSidebar}
             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-            to="/settings"
+            to="/settings/account"
           >
-            {/* <BellRing className="h-5 w-5" aria-hidden="true" /> */}
+            {/* <BellRing className="h-5 w-5" aria-hidden="true" />  */}
             <Wrench className="h-5 w-5" aria-hidden="true" />
-            <span className="mx-2 text-sm font-medium">General</span>
-          </NavLink>
-          <NavLink
-           onClick={toggleSidebar}
-            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-            to="/create-task"
-          >
-            <Brush className="h-5 w-5" aria-hidden="true" />
-            <span className="mx-2 text-sm font-medium">Personalise</span>
+            {/* <Brush className="h-5 w-5" aria-hidden="true" />  */}
+            <span className="mx-2 text-sm font-medium">Settings</span>
           </NavLink>
         </div>
+        {/* <div className="space-y-3 ">
+          <label className="px-3 text-xs font-semibold uppercase text-gray-900"></label>
+          
+        </div> */}
 
         <div className="space-y-3 ">
           <label className="px-3 text-xs font-semibold uppercase text-gray-900">
