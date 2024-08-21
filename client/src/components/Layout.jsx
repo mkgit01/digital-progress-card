@@ -14,9 +14,9 @@ function Layout() {
     <>
     {loggedIn?
     <>
-    <div className='full-page light'>
+    <div className="full-page">
       <Header />
-      <Outlet />
+      <Outlet className="outlet"/>
         </div>
       <Footer />
       </>
