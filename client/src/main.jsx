@@ -12,6 +12,7 @@ import Settings from './components/Settings/Settings'
 import Account from './components/Settings/Account'
 import Personalize from './components/Settings/Personalize'
 import Rewards from './components/Tasks/Rewards'
+import ContactPage from './components/Contact/ContactPage'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
       <Route path='create-task' element={<CreateTask />}/>
       <Route path='rewards' element={<Rewards />}/>
       <Route path='profile' element={<Profile />}/>
+      <Route path='contact-us' element={<ContactPage />}/>
       <Route path='settings' element={<Settings />}/>
       <Route path='settings/account' element={<Account />}/>
       <Route path='settings/personalize' element={<Personalize />}/>

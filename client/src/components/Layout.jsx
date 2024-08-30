@@ -6,7 +6,7 @@ import '../styles/index.css'
 import Login from './Auth/Login'
 
 function Layout() {
-  const [loggedIn, setLoggedIn] = useState(true)
+  const [loggedIn, setLoggedIn] = useState(false)
   const setLogin= () =>{
     setLoggedIn((login)=>!login)
   }
@@ -14,9 +14,9 @@ function Layout() {
     <>
     {loggedIn?
     <>
-    <div className="full-page">
+    <div className='full-page'>
       <Header />
-      <Outlet className="outlet"/>
+      <Outlet/>
         </div>
       <Footer />
       </>

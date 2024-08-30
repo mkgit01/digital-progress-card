@@ -2,7 +2,6 @@
     position: relative;
     height: calc(100vh - 3rem);
     width: 100%;
-    border: red solid 2px;
 }
 .container {
     position: absolute;
@@ -154,7 +153,6 @@ input[type="file"].image-input {
         position: relative;
         height: calc(100vh - 7rem);
         width: 100%;
-        border: red solid 2px;
     }
     .task-input-field{
         flex-direction: column;
