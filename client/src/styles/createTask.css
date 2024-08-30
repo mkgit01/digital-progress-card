@@ -1,10 +1,16 @@
+.create-task-wrapper{
+    position: relative;
+    height: calc(100vh - 3rem);
+    width: 100%;
+}
 .container {
-    display: flex;
-    margin: auto;
     position: absolute;
-    top: 50%;
+    height: max-content;
     left: 50%;
-    transform: translate(-50%, -50%);
+    top: 50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    margin: 1em auto;
     max-width: 60%;
 }
 h3{
@@ -12,15 +18,15 @@ h3{
 }
 
 .main-section {
-    padding: 20px;
+    padding: 1.25em;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1em;
     width: 100%;
 }
 
 .section-label {
-    font-size: 24px;
+    font-size: 1.5em;
     font-weight: bold;
     left: 0;
     
@@ -29,59 +35,59 @@ h3{
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 10px;
+    gap: 0.8em;
 }
 .task-input-name input{
-    padding: 20px;
+    padding: 1.25em;
     border: solid 0.5px var(--secondry-color);
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 1em;
 }
 
 .task-input-field {
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: 1.25em;
     
 }
 .target-input{
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.5em;
     flex: 1;
 }
 .unit-input{
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.5em;
     flex: 1;
 }
 
 .task-input-field input,
 .task-input-field select {
-    padding: 20px;
+    padding: 1.25em;
     border: solid 0.5px var(--secondry-color);
     border-radius: 5px;
-    font-size: 16px;
-    height: 60px;
+    font-size: 1em;
+    height: 4em;
 }
 select option {
-    font-size: 16px;
-    padding: 10px;
+    font-size: 1em;
+    padding: 0.5em;
 }
 
 .reward-input-field {
     display: flex;
-    gap: 15px;
+    gap: 0.8em;
     align-items: center;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 0.5em;
 }
 
 .reward-input-field input,
 .reward-input-field select {
-    width: calc(50% - 7.5px);
-    padding: 10px;
+    width: calc(50% - 0.5em);
+    padding: 0.5em;
     border: solid 0.5px var(--secondry-color);
     border-radius: 5px;
 }
@@ -91,7 +97,6 @@ select option {
     padding: 1em 2em;
     border: none;
     cursor: pointer;
-    /* width: 100px; */
     color: var(--light-text);
     transition: all ease 300ms;
 }
@@ -103,7 +108,7 @@ select option {
     flex: 1;
     margin-top: auto;
     width: 100%;
-    height: 60px;
+    height: 3.8em;
 
 }
 
@@ -113,17 +118,17 @@ select option {
 
 .additional-input {
     display: flex;
-    gap: 15px;
+    gap: 0.8em;
     align-items: flex-start; 
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 0.5em;
 }
 .additional-input input,
 .additional-input textarea {
-    padding: 20px;
+    padding: 1.25em;
     border: solid 0.5px var(--secondry-color);
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 1em;
     flex: 1; 
     box-sizing: border-box; 
     height: 100%;
@@ -144,8 +149,16 @@ input[type="file"].image-input {
 
 
 @media screen and (max-width:730px) {
+    .create-task-wrapper{
+        position: relative;
+        height: calc(100vh - 7rem);
+        width: 100%;
+    }
     .task-input-field{
         flex-direction: column;
+    }
+    .container {
+        max-width: none;
     }
   }
 
