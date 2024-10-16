@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 :root{
-    --primary-color:#1A1A1A;
+    /* --primary-color:#1A1A1A;
     --accent-color:#fefefe;
     --opt-color:#1b4332;
     --hover-color:#5f5f5f;
@@ -11,10 +11,11 @@
     --text-color: #000000 --primary-font: 'Rubik', sans-serif;
     --secondary-font: 'Roboto', sans-serif;
     --third-font: 'Ubuntu', sans-serif;
-    background-color: #fff;
+    background-color: #fff; */
 }
-/* .light{
+.light{
     --primary-color:#1A1A1A;
+    --text:black;
     --accent-color:#fefefe;
     --opt-color:#1b4332;
     --hover-color:#5f5f5f;
@@ -23,22 +24,23 @@
     --text-color: #000000 --primary-font: 'Rubik', sans-serif;
     --secondary-font: 'Roboto', sans-serif;
     --third-font: 'Ubuntu', sans-serif;
-    background-color: #fff;
+    background: #fff;
   
 }
 
 .dark{
-    --primary-color:#1A1A1A;
-    --accent-color:#fefefe;
+    --primary-color:#181C14;
+    --accent-color:#3C3D37;
     --opt-color:#1b4332;
-    --hover-color:#5f5f5f;
+    --hover-color:#697565;
     --secondry-color:#1b4332;
-    --light-text: black;
+    --text:white;
+    --light-text: white;
     --text-color: #000000 --primary-font: 'Rubik', sans-serif;
     --secondary-font: 'Roboto', sans-serif;
     --third-font: 'Ubuntu', sans-serif;
-    background-color: #000;
-} */
+    background: black;
+}
 
 
 /* #blue{
