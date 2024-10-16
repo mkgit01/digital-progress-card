@@ -3,7 +3,7 @@ import {ArrowRight} from 'lucide-react'
 import Register from './Register'
 
 const Login = (props) => {
-  const [registerd, setRegistered] = useState(true)
+  const [registerd, setRegistered] = useState(false)
   
   const toggleLogin= () =>{
     setRegistered((register)=>!register)

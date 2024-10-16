@@ -111,7 +111,7 @@ const Account = () => {
         <Settings />
       </div>
 
-      <div className="m-auto p-4 sm:w-3/4  ">
+      <div className="m-auto p-4 sm:w-3/4 ac-settings">
         <h1 className="text-2xl font-bold mb-4">Account</h1>
         <div>
           {/*----------------------Profile Image-------------------------*/}
@@ -230,7 +230,7 @@ const Account = () => {
                 <strong>Password: </strong>
                 <button
                   onClick={handleChangePassword}
-                  className="text-blue-600"
+                  className="blue-btn"
                 >
                   Change Password
                 </button>
@@ -248,20 +248,20 @@ const Account = () => {
                 will be deleted. This action cannot be undone!
               </p>
               <button
-                className="btn bg-red-600 text-white rounded-md mt-4"
+                className="btn bg-red-600 rounded-md mt-4"
                 onClick={() => setShowDeleteConfirm(true)}
               >
                 Delete Account
               </button>
               {showDeleteConfirm && (
-                <div className="mt-4 p-4 border border-red-600 rounded-md bg-red-100">
+                <div className="mt-4 p-4 border border-red-600 rounded-md  ">
                   <p>
                     Are you sure you want to delete your account? This action
                     cannot be undone.
                   </p>
                   <div className="flex gap-4 mt-4">
                     <button
-                      className="btn bg-red-600 text-white rounded-md"
+                      className="btn bg-red-600 rounded-md"
                       onClick={handleDeleteAccount}
                     >
                       Confirm Delete

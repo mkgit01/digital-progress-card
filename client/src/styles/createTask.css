@@ -5,14 +5,16 @@
 }
 .container {
     position: absolute;
-    height: max-content;
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
     display: flex;
     margin: 1em auto;
     max-width: 60%;
+    background-color: var(--accent-color);
+    max-height:max-content;
 }
+
 h3{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
