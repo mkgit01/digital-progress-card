@@ -1,147 +1,166 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import useAuth from "../Auth/useAuth";
+import { db } from "../../../firebaseConfig";
 import UserProfile from "../Marginals/UserProfile";
 import "../../styles/settings.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {  faFloppyDisk, faPenToSquare, faRepeat, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { faFloppyDisk, faPenToSquare, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 const Profile = () => {
-  const [address, setAddress] = useState("Puri, Odisha, India");
-  const [gender, setGender] = useState("Male");
-  const [age, setAge] = useState("21");
-  const [about, setAbout] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget mattis ligula. Aliquam nec ligula non risus gravida imperdiet non vitae magna. Curabitur et eleifend dui. Suspendisse pulvinar est in semper volutpat. Pellentesque pellentesque consectetur eros et tristique. Quisque sodales nunc id sapien sodales pretium. In ut turpis vitae turpis.");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const { user, handlePasswordReset, logout } = useAuth();
+  const [address, setAddress] = useState("N/A");
+  const [gender, setGender] = useState("N/A");
+  const [age, setAge] = useState("N/A");
+  const [about, setAbout] = useState("N/A");
+  const [email, setEmail] = useState("N/A");
+  const [phone, setPhone] = useState("N/A");
   const [isEditing, setIsEditing] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [ageError, setAgeError] = useState("");
+  
+  const [originalData, setOriginalData] = useState({});
 
-  const MAX_WORDS = 50;
+  useEffect(() => {
+    // Fetch user data from Firestore on component mount
+    const fetchUserProfile = async () => {
+      if (user && user.uid) {
+        console.log("Fetching data for user:", user.uid);
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+          console.log("User data from Firestore:", userDoc.data());
+          const userData = userDoc.data();
+          setOriginalData(userData);  // Save the original data for cancel functionality
+          setAddress(userData.address || "Not provided");
+          setGender(userData.gender || "Not provided");
+          setAge(userData.age || "Not provided");
+          setAbout(userData.about || "Not provided");
+          setEmail(userData.email || "Not provided");
+          setPhone(userData.phone || "Not provided")
+        } else {
+          console.log("No user data found in Firestore for this UID");
+        }
+      }
+    };
+    fetchUserProfile();
+  }, [user]);
 
-  const handleAddressChange = (e) => {
-    setAddress(e.target.value);
+  const handleEdit = () => {
+    setIsEditing((edit) => !edit);
   };
 
-  const handleGenderChange = (e) => {
-    setGender(e.target.value);
+  const handleCancel = () => {
+    // Reset form data to the original values
+    setAddress(originalData.address || "Not provided");
+    setGender(originalData.gender || "Not provided");
+    setAge(originalData.age || "Not provided");
+    setAbout(originalData.about || "Not provided");
+    setPhone(originalData.phone || "Not provided");
+    setIsEditing(false);
+    setAgeError("");
   };
 
+  // Update the age value with validation
   const handleAgeChange = (e) => {
-    setAge(e.target.value);
-  };
- 
-  const handleAboutChange = (e) => {
-    const text = e.target.value;
-    // Split the text by whitespace and filter out any empty strings
-    const words = text.split(/\s+/).filter(Boolean);
-    // Check if the number of words exceeds the maximum limit
-    if (words.length <= MAX_WORDS) {
-      setAbout(text);
+    const value = e.target.value;
+    if (value === "") {
+      setAge("");
+      setAgeError("");
+      return;
+    }
+
+    const ageNumber = Number(value);
+    if (ageNumber >= 1 && ageNumber <= 180) {
+      setAge(ageNumber);
+      setAgeError("");
+    } else {
+      setAgeError("Age must be between 1 and 180");
     }
   };
 
-  const handleOldPasswordChange = (e) => {
-    setOldPassword(e.target.value);
-  };
-
-  const handleNewPasswordChange = (e) => {
-    setNewPassword(e.target.value);
-  };
-
-  const handleChangePassword = () => {
-    setIsChangingPassword(true);
-  };
-
-  const handleSavePassword = () => {
-    // Here you can add logic to save the new password to the backend or perform any other action
-    console.log("Old Password:", oldPassword);
-    console.log("New Password:", newPassword);
-    setOldPassword(""); // Reset the old password field after saving
-    setNewPassword(""); // Reset the new password field after saving
-    setIsChangingPassword(false); // Close the password change input fields
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsEditing(false);
-    // Here you can add logic to save changes to the backend or perform any other action
+    if (user) {
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        address,
+        gender,
+        age,
+        about,
+        phone,
+      }, { merge: true });
+    }
+  };
+
+  const confirmPasswordReset = () => {
+    const isConfirmed = window.confirm("Are you sure you want to reset your password?");
+    if (isConfirmed) {
+      handlePasswordReset();
+    }
   };
 
   return (
     <div className="profilePage p-4 h-screen flex flex-col sm:flex-row justify-center gap-4 items-center">
-
-      {/*---------------------------------- Profile Block 1 -----------------------------------------*/}
-      <div className="  shadow-lg rounded-lg h-auto sm:h-96 w-full sm:w-1/2 leading-7" >
+      {/* Profile Block 1 */}
+      <div className="shadow-lg rounded-lg h-auto sm:h-96 w-full sm:w-1/2 leading-7">
         <div className="flex justify-center items-center">
           <UserProfile />
         </div>
-        <div className=" flex justify-between m-4">
+        <div className="flex justify-between m-4">
           <div>
-            <p className="">
-              <strong>Email:</strong> username@example.com
+            <p>
+              <strong>Email:</strong> {email}
             </p>
-            <p className="">
-              <strong>Phone:</strong> +91 8453265342
-            </p>
-            {isChangingPassword ? (
-              <>
-                <input
-                  type="password"
-                  placeholder="Old Password"
-                  value={oldPassword}
-                  onChange={handleOldPasswordChange}
-                  className="mt-2 px-2 py-1 border rounded ml-4"
-                />
-                <input
-                  type="password"
-                  placeholder="New Password"
-                  value={newPassword}
-                  onChange={handleNewPasswordChange}
-                  className="mt-2 px-2 py-1 border rounded ml-4"
-                />
-                <button
-                  onClick={handleSavePassword}
-                  className="btn rounded-md ml-4 mt-2"
-                >
-                  <FontAwesomeIcon icon={faFloppyDisk} />
-                </button>
-              </>
+            {isEditing ? (
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="mt-2 px-2 py-1 border rounded ml-4"
+                placeholder="Phone Number"
+              />
             ) : (
-              <p className="">
+              <p>
+                <strong>Phone:</strong> {phone}
+              </p>
+            )}
+            <p>
               <strong>Password: </strong>
               <button
-                onClick={handleChangePassword}
+                onClick={confirmPasswordReset}
                 className="text-blue-600"
-              >Change Password 
+              >
+                Reset Password
               </button>
             </p>
-            )}
-            
           </div>
           <div className="mt-16 sm:mt-0">
-            <button className="btn rounded-md ">
+            <button onClick={logout} className="btn rounded-md ">
               <FontAwesomeIcon icon={faRightFromBracket} />
             </button>
-            
+            <span className="absolute -top-6 -right-2 bg-gray-700 text-white text-xs rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              Log Out
+            </span>
           </div>
         </div>
       </div>
-      {/*---------------------------------- Profile Block 2 Super Class ---------------------------------------*/}
-      <div className=" shadow-lg rounded-lg sm:h-96 w-full sm:w-1/2 leading-7 " >
+      {/* Profile Block 2 */}
+      <div className="shadow-lg rounded-lg sm:h-96 w-full sm:w-1/2 leading-7">
         {isEditing ? (
           <>
             <input
               type="text"
               value={address}
-              onChange={handleAddressChange}
+              onChange={(e) => setAddress(e.target.value)}
               className="mt-4 px-2 py-1 border rounded ml-4"
+              placeholder="Address"
             />
             <select
               value={gender}
-              onChange={handleGenderChange}
+              onChange={(e) => setGender(e.target.value)}
               className="mt-2 px-2 py-1 border rounded ml-4"
             >
+              <option value="">Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
@@ -151,48 +170,53 @@ const Profile = () => {
               value={age}
               onChange={handleAgeChange}
               className="mt-2 px-2 py-1 border rounded ml-4"
+              placeholder="Age"
             />
+            {ageError && <p style={{ color: "red" }}>{ageError}</p>}
             <textarea
-              type="text"
               value={about}
-              onChange={handleAboutChange}
+              onChange={(e) => setAbout(e.target.value)}
               className="editAbout px-2 py-1 border rounded m-4 h-40"
+              placeholder="About"
             />
             <button
               onClick={handleSave}
-              className="btn m-4 rounded-md "
+              className="btn m-4 rounded-md"
             >
               <FontAwesomeIcon icon={faFloppyDisk} />
+            </button>
+            <button
+              onClick={handleCancel}
+              className="btn m-4 rounded-md"
+            >
+              Cancel
             </button>
           </>
         ) : (
           <>
-          {/*---------------------------------- Profile Block 2 Sub Class ---------------------------------------*/}
-            <div className="m-4 flex   justify-between" >
+            <div className="m-4 flex justify-between">
               <div>
                 <p className="mt-4">
                   <strong>Address:</strong> {address}
                 </p>
-                <p className="">
-                  <strong>Sex:</strong> {gender}
-                
+                <p>
+                  <strong>Gender:</strong> {gender}
                 </p>
-                <p className="">
+                <p>
                   <strong>Age:</strong> {age}
                 </p>
-
               </div>
               <div className="right-0 mt-4 md:mt-0 relative">
                 <button
                   onClick={handleEdit}
-                  className=" btn rounded-md "
+                  className="btn rounded-md"
                 >
                   <FontAwesomeIcon icon={faPenToSquare} />{" "}
                 </button>
               </div>
             </div>
             <div className="p-4">
-                  <strong>About:</strong> {about}
+              <strong>About:</strong> {about}
             </div>
           </>
         )}

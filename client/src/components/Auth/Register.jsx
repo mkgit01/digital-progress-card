@@ -1,7 +1,18 @@
 import React from 'react'
+import useAuth from './useAuth'
 import {ArrowRight} from 'lucide-react'
 
-const Register = (props) => {
+const Register = ({toggleLogin, setLogin}) => {
+
+  const {
+    email, setEmail,
+    password, setPassword,
+    fullName, setFullName,
+    error,
+    handleGoogleLogin,
+    handleEmailRegister,
+  } = useAuth();
+
   return (
     <>
     <section>
@@ -16,13 +27,13 @@ const Register = (props) => {
         <p className="mt-2 text-center text-base text-gray-600">
           Already have an account?{' '}
           <em
-            onClick={props.toggleLogin}
+            onClick={toggleLogin}
             className="font-medium text-black transition-all duration-200 hover:underline cursor-pointer"
           >
             Sign In
           </em>
         </p>
-        <form action="#" method="POST" className="mt-8">
+        <form onSubmit={handleEmailRegister} className="mt-8">
           <div className="space-y-5">
             <div>
               <label htmlFor="name" className="text-base font-medium text-gray-900">
@@ -35,6 +46,9 @@ const Register = (props) => {
                   type="text"
                   placeholder="Full Name"
                   id="name"
+                  value={fullName}
+                  onChange={(e)=> setFullName(e.target.value)}
+                  required
                 ></input>
               </div>
             </div>
@@ -49,6 +63,9 @@ const Register = (props) => {
                   type="email"
                   placeholder="Email"
                   id="email"
+                  value={email}
+                  onChange={(e)=> setEmail(e.target.value)}
+                  required
                 ></input>
               </div>
             </div>
@@ -65,13 +82,16 @@ const Register = (props) => {
                   type="password"
                   placeholder="Password"
                   id="password"
+                  value={password}
+                  onChange={(e)=> setPassword(e.target.value)}
+                  required
                 ></input>
               </div>
             </div>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
             <div>
               <button
-                onClick={props.toggleLogin}
-                type="button"
+                type="submit"
                 className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
               >
                 Create Account <ArrowRight className="ml-2" size={16} />
@@ -82,6 +102,7 @@ const Register = (props) => {
         <div className="mt-3 space-y-3">
           <button
             type="button"
+            onClick={()=>handleGoogleLogin(true)}
             className="relative inline-flex w-full items-center justify-center rounded-md border border-gray-400 bg-white px-3.5 py-2.5 font-semibold text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-black focus:bg-gray-100 focus:text-black focus:outline-none"
           >
                <span className="mr-2 inline-block">

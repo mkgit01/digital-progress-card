@@ -17,7 +17,7 @@ import ContactPage from './components/Contact/ContactPage'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
-      <Route path='' element={<Dashboard />}/>
+      <Route index element={<Dashboard />}/>
       <Route path='login' element={<Login />}/>
       <Route path='task' element={<TaskPage />}/>
       <Route path='create-task' element={<CreateTask />}/>

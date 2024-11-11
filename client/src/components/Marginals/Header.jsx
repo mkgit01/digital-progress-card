@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "../../styles/toggleMode.css";
 
-const Header = () => {
+const Header = ({user}) => {
   const [mode, setMode] = useState(localStorage.getItem("mode") || "light");
 
   const toggleMode = () => {
@@ -22,7 +22,7 @@ const Header = () => {
   return (
     <>
       {/* <Sidebar /> */}
-      <Sidebar2 />
+      <Sidebar2 user={user}/>
 
       <div className="header flex items-center justify-between h-16 px-4 mb-1 top-0">
         <div className="logo-holder m-auto">
