@@ -36,7 +36,7 @@ const Header = ({user}) => {
         </div>
 
         {/* dark and light mode toggle ----------set display inline-block----------*/}
-          <div className="relative  align-middle select-none transition hidden duration-200 ease-in">
+          <div className="relative  align-middle select-none transition duration-200 ease-in hidden">
             <input
               type="checkbox"
               name="toggle"
