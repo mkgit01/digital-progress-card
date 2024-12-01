@@ -1,10 +1,39 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../styles/createTask.css";
+import { createTask } from "../../services/api";
+import useAuth from "../Auth/useAuth";
 
 function CreateTask() {
+  const {user} =useAuth();
+  const [taskName, setTaskName] = useState("");
+  const [target, setTarget] = useState("");
+  const [unit, setUnit] = useState("select");
   const [rewards, setRewards] = useState([]);
-  const [target, setTarget] = useState("");  // New state for target value
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleTaskSubmit = async (e) => {
+    e.preventDefault();
+
+    const taskData = {
+      userId:user.uid,
+      name: taskName,
+      target: target,
+      unit: unit,
+      rewards: rewards,
+    };
+    console.log(taskData)
+    console.log("userId:", taskData.userId,"name:", taskData.name,"target:", taskData.target,"unit:", taskData.unit,"rewards:", taskData.rewards);
+    try {
+      const response = await createTask(taskData);
+      console.log("Task created:", response);
+      navigate('/');
+    } catch (err) {
+      setError("Failed to create task");
+      console.error("Error creating task:", err);
+    }
+  };
 
   const addReward = () => {
     setRewards([...rewards, { unit: "select", name: "" }]);
@@ -30,10 +59,16 @@ function CreateTask() {
         <div className="section-label">
           <h3>Create Task</h3>
         </div>
-
-        <div className="task-input-name">
+      <form onSubmit={handleTaskSubmit}>
+      <div className="task-input-name">
           <label htmlFor="task-name">Task</label>
-          <input type="text" id="task-name" placeholder="Task Name" required />
+          <input 
+          type="text" 
+          id="task-name" 
+          placeholder="Task Name" 
+          value={taskName}
+          onChange={(e)=> setTaskName(e.target.value)}
+          required />
         </div>
 
         <div className="task-input-field">
@@ -44,13 +79,18 @@ function CreateTask() {
               id="task-target"
               placeholder="Like 1,2,3..."
               value={target}
-              onChange={handleTargetChange}  // Added validation
+              onChange={handleTargetChange}
               required
             />
           </div>
           <div className="unit-input">
             <label htmlFor="task-unit">Unit</label>
-            <select id="task-unit" name="task-unit" required>
+            <select 
+            id="task-unit" 
+            name="task-unit" 
+            value={unit}
+            onChange={(e)=>setUnit(e.target.value)}
+            required>
               <option value="select">Select</option>
               <option value="kg">Kilogram (kg)</option>
               <option value="g">Gram (g)</option>
@@ -60,7 +100,7 @@ function CreateTask() {
               <option value="min">Minutes (min)</option>
             </select>
           </div>
-          <button className="btn add-reward-btn rounded-md" onClick={addReward}>
+          <button className="btn add-reward-btn rounded-md" type="button" onClick={addReward}>
             Add Reward
           </button>
         </div>
@@ -94,18 +134,16 @@ function CreateTask() {
           ))}
         </div>
 
-        <div className="additional-input">
+        {/* <div className="additional-input">
           <textarea className="comment-input" placeholder="Enter your comment"></textarea>
           <input type="file" className="image-input" accept="image/*" />
-        </div>
+        </div> */}
         <div className="task-btn-wrapper flex flex-row justify-evenly m-auto gap-4">
-          <Link to='/task'>
-            <button className="btn cancel-task-btn rounded-md">Cancel</button>
-          </Link>
-          <Link to='/task'>
-            <button className="btn create-task-btn rounded-md">Create Task</button>
-          </Link>
+            <button className="btn cancel-task-btn rounded-md" type="button" onClick={()=> navigate('/')}>Cancel</button>
+            <button className="btn create-task-btn rounded-md" type="submit">Create Task</button>
         </div>
+      </form>
+        {error && <div className="error">{error}</div>}
       </div>
     </div>
     </div>
