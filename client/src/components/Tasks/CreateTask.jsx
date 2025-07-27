@@ -19,13 +19,22 @@ import {
 import { createTask } from "../../services/api";
 import useAuth from "../Auth/useAuth";
 
-function CreateTaskDialog({ open, onClose }) {
+function CreateTaskDialog({ open, onClose, onTaskCreated }) {
   const { user } = useAuth();
   const [taskName, setTaskName] = useState("");
   const [target, setTarget] = useState("");
   const [unit, setUnit] = useState("select");
   const [rewards, setRewards] = useState([]);
   const [error, setError] = useState("");
+
+  const handleClose = () => {
+    setTaskName("");
+    setTarget("");
+    setUnit("select");
+    setRewards([]);
+    setError("");
+    onClose(); // closes the dialog
+  };
 
   const handleTaskSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +50,8 @@ function CreateTaskDialog({ open, onClose }) {
     try {
       const response = await createTask(taskData);
       console.log("Task created:", response);
-      onClose(); // Close dialog on success
+      onTaskCreated();
+      handleClose();
     } catch (err) {
       setError("Failed to create task");
       console.error("Error creating task:", err);
@@ -65,15 +75,6 @@ function CreateTaskDialog({ open, onClose }) {
     }
   };
 
-  const handleClose = () => {
-    setTaskName("");
-    setTarget("");
-    setUnit("select");
-    setRewards([]);
-    setError("");
-    onClose();
-  };
-
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle
@@ -91,7 +92,7 @@ function CreateTaskDialog({ open, onClose }) {
       <DialogContent dividers>
         <Box component="form" onSubmit={handleTaskSubmit} noValidate>
           <Grid container spacing={2}>
-            <Grid size={{xs:12}}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label="Task Name"
                 variant="outlined"
@@ -103,7 +104,7 @@ function CreateTaskDialog({ open, onClose }) {
               />
             </Grid>
 
-            <Grid size={{xs:12, sm:6}}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label="Target"
                 type="number"
@@ -114,7 +115,7 @@ function CreateTaskDialog({ open, onClose }) {
                 required
               />
             </Grid>
-            <Grid size={{xs:12, sm:6}}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Unit</InputLabel>
                 <Select
@@ -144,7 +145,7 @@ function CreateTaskDialog({ open, onClose }) {
           <Box mt={2}>
             {rewards.map((reward, index) => (
               <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
-                <Grid size={{xs:6}}>
+                <Grid size={{ xs: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel>Percentage</InputLabel>
                     <Select
@@ -175,7 +176,7 @@ function CreateTaskDialog({ open, onClose }) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid size={{xs:6}}>
+                <Grid size={{ xs: 6 }}>
                   <TextField
                     placeholder="Reward Name"
                     fullWidth

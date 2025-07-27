@@ -39,3 +39,45 @@ export const getTasks = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// DELETE /api/tasks/:id
+export const deleteTask = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedTask = await Task.findByIdAndDelete(id);
+
+    if (!deletedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json({ message: "Task deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting task:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+// PUT /api/tasks/:id
+export const updateTask = async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    console.error("Error updating task:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+

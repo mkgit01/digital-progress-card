@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -10,26 +10,54 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-  Dialog,
 } from "@mui/material";
 import { FilePenLine, Trash2 } from "lucide-react";
-
-// import AddTask from './AddTask';
-// import CreateTask from './CreateTask';
 import "../../styles/taskPage.css";
 import CreateTaskDialog from "./CreateTask";
+import { deleteTask, getTasks } from "../../services/api";
+import useAuth from "../Auth/useAuth";
 
 const TaskPage = () => {
-  const [noTask, setNoTask] = useState(true);
   const [tasks, setTasks] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const { user } = useAuth();
+  const userId = user ? user.uid : null;
+
+  const fetchUserTasks = async () => {
+    try {
+      const data = await getTasks(userId);
+      setTasks(data);
+    } catch (error) {
+      console.error("Failed to load tasks:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      fetchUserTasks();
+    }
+  }, [userId]);
 
   const handleEditTask = (index) => {
     console.log("Edit task", index);
   };
 
-  const handleDeleteTask = (index) => {
-    console.log("Delete task", index);
+  const handleDeleteTask = async (index) => {
+    const taskId = tasks[index]._id;
+    try {
+      const response = await deleteTask(taskId);
+      if (response.status === 200) {
+        await fetchUserTasks();
+      } else {
+        console.log("Delete failed:", response.data?.message);
+      }
+    } catch (error) {
+      console.log("Failed to delete task:", error.message);
+    }
+  };
+  const handleTaskCreated = () => {
+    fetchUserTasks();
+    setOpenDialog(false);
   };
 
   return (
@@ -76,23 +104,50 @@ const TaskPage = () => {
                   <ListItem
                     key={index}
                     secondaryAction={
-                      <Box>
-                        <IconButton
-                          edge="end"
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                          variant="outlined"
+                          color="primary"
                           onClick={() => handleEditTask(index)}
+                          disabled
                         >
-                          <FilePenLine size={20} />
-                        </IconButton>
-                        <IconButton
-                          edge="end"
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="error"
                           onClick={() => handleDeleteTask(index)}
                         >
-                          <Trash2 size={20} />
-                        </IconButton>
-                      </Box>
+                          Delete
+                        </Button>
+                      </Stack>
                     }
                   >
-                    <ListItemText primary={task} />
+                    <Stack direction="row" spacing={4} alignItems="center">
+                      <ListItemText
+                        sx={{ minWidth: "100px" }}
+                        primary={
+                          <strong>
+                            {task.title || task.name || "Untitled Task"}
+                          </strong>
+                        }
+                      />
+                      <ListItemText
+                        sx={{ minWidth: "100px" }}
+                        primary={
+                          task.target && task.unit
+                            ? `${task.target} ${task.unit}`
+                            : "Target not set"
+                        }
+                      />
+                      <ListItemText
+                        primary={
+                          task.progress?.length
+                            ? `Progress: ${task.progress.length}`
+                            : "No progress yet"
+                        }
+                      />
+                    </Stack>
                   </ListItem>
                 ))}
               </List>
@@ -104,6 +159,7 @@ const TaskPage = () => {
         <CreateTaskDialog
           open={openDialog}
           onClose={() => setOpenDialog(false)}
+          onTaskCreated={handleTaskCreated}
         />
       </Box>
     </Container>
