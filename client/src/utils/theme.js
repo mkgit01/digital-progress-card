@@ -8,7 +8,7 @@ const theme = createTheme({
       contrastText: '#ffffff', // white text on black
     },
     secondary: {
-      main: '#f50057', // you can customize this too
+      main: '#f50057', 
     },
     background: {
       default: '#f9f9f9', // light background
@@ -18,6 +18,9 @@ const theme = createTheme({
       primary: '#000000',
       secondary: '#555555',
     },
+    invert:{
+      main: '#ffffff', // white
+    }
   },
   typography: {
     fontFamily: 'Inter, Roboto, sans-serif',

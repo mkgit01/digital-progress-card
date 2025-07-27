@@ -1,97 +1,147 @@
-import React, { useState } from 'react'
-import { BarChart, Wallet, Medal, Brush, Wrench, LogOut, Headset, BellRing } from 'lucide-react'
-import useAuth from '../Auth/useAuth'
-import { NavLink } from 'react-router-dom'
-import UserProfile from './UserProfile'
+import React, { useState } from "react";
+import {
+  Drawer,
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Typography,
+} from "@mui/material";
+import {
+  Menu as MenuIcon,
+  ChevronLeft as ChevronLeftIcon,
+} from "@mui/icons-material";
+import {
+  BarChart,
+  Wallet,
+  Medal,
+  Wrench,
+  LogOut,
+  Headset,
+} from "lucide-react";
+import { NavLink } from "react-router-dom";
+import UserProfile from "./UserProfile";
+import useAuth from "../Auth/useAuth";
+import { BsFillMenuButtonWideFill } from "react-icons/bs";
+import { TbLayoutSidebarRightCollapse } from "react-icons/tb";
+import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 
-const Sidebar2 = ({user}) => {
-  const {logout} = useAuth();
+const Sidebar2 = ({ user }) => {
+  const { logout } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    const [sidebarOn,setSidebarOn] = useState(false)
-    const toggleSidebar= ()=>{
-      setSidebarOn((lastState)=>!lastState)
-    }
-    
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
+  const NavItem = ({ to, icon, label, onClick = toggleSidebar }) => (
+    <ListItem disablePadding>
+      <ListItemButton
+        component={NavLink}
+        to={to}
+        onClick={onClick}
+        sx={{ px: 2 }}
+      >
+        <ListItemIcon sx={{ minWidth: 36 }}>{icon}</ListItemIcon>
+        <ListItemText primary={label} />
+      </ListItemButton>
+    </ListItem>
+  );
+
   return (
     <>
-    <img title='menu' onClick={toggleSidebar} className='absolute top-0 left-0 p-2 cursor-pointer' width="64" height="64" src="https://img.icons8.com/laces/64/FFFFFF/menu.png" alt="menu"/>
-    <aside className={`sidebar ${sidebarOn?'open':''} flex h-screen flex-col overflow-y-auto border-r bg-white px-5 py-8`}>
-    <img onClick={toggleSidebar} className='absolute top-6 right-0 cursor-pointer' width="30" height="30" src="https://img.icons8.com/plumpy/30/back--v1.png" alt="close"/>
+      {/* Menu Toggle Button */}
+      <IconButton
+        onClick={toggleSidebar}
+        sx={{ position: "fixed", top: 10, left: 10 , color:"invert.main"}}
 
-    <UserProfile toggleSidebar={toggleSidebar} user={user}/>
-    <div className="sidebar-box mx-auto mt-6 flex flex-1 flex-col justify-between">
-      <nav className="-mx-3 space-y-6 ">
-        <div className="space-y-3 ">
-          <label className="px-3 text-xs font-semibold uppercase text-gray-900">analytics</label>
-          <NavLink
-           onClick={toggleSidebar}
-            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-            to="/"
-          >
-            <BarChart className="h-5 w-5" aria-hidden="true" />
-            <span className="mx-2 text-sm font-medium">Dashboard</span>
-          </NavLink>
-          <NavLink
-           onClick={toggleSidebar}
-            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-            to="/task"
-          >
-            <Wallet className="h-5 w-5" aria-hidden="true" />
-            <span className="mx-2 text-sm font-medium">Task</span>
-          </NavLink>
+      >
+        <TbLayoutSidebarRightCollapse size={30} />
+      </IconButton>
 
-          <NavLink
-           onClick={toggleSidebar}
-            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-            to="/rewards"
+
+      {/* Sidebar Drawer */}
+      <Drawer
+        variant="temporary"
+        anchor="left"
+        open={sidebarOpen}
+        onClose={toggleSidebar}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        // sx={{
+        //   "& .MuiDrawer-paper": {
+        //     // minWidth: 200,
+        //     // boxSizing: "border-box",/
+        //   },
+        // }}
+      >
+        {/* Sidebar Header */}
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          px={2}
+          py={1}
+          borderBottom="1px solid #ddd"
+        >
+          <Typography variant="h6">DPC</Typography>
+          <IconButton onClick={toggleSidebar}>
+            <TbLayoutSidebarLeftCollapse size={30} />
+          </IconButton>
+        </Box>
+
+        {/* User Profile */}
+        <Box px={2} py={1}>
+          <UserProfile toggleSidebar={toggleSidebar} user={user} />
+        </Box>
+
+        {/* Navigation Links */}
+        <List>
+          <Typography
+            variant="caption"
+            sx={{ textTransform: "uppercase", px: 2, color: "text.secondary" }}
           >
-            <Medal className="h-5 w-5" aria-hidden="true" />
-            <span className="mx-2 text-sm font-medium">Rewards</span>
-          </NavLink>
-          <NavLink
-           onClick={toggleSidebar}
-            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+            Analytics
+          </Typography>
+          <NavItem to="/" icon={<BarChart size={20} />} label="Dashboard" />
+          <NavItem to="/task" icon={<Wallet size={20} />} label="Task" />
+          <NavItem to="/rewards" icon={<Medal size={20} />} label="Rewards" />
+          <NavItem
             to="/settings/account"
-          >
-            {/* <BellRing className="h-5 w-5" aria-hidden="true" />  */}
-            <Wrench className="h-5 w-5" aria-hidden="true" />
-            {/* <Brush className="h-5 w-5" aria-hidden="true" />  */}
-            <span className="mx-2 text-sm font-medium">Settings</span>
-          </NavLink>
-        </div>
-        {/* <div className="space-y-3 ">
-          <label className="px-3 text-xs font-semibold uppercase text-gray-900"></label>
-          
-        </div> */}
+            icon={<Wrench size={20} />}
+            label="Settings"
+          />
+        </List>
 
-        <div className="space-y-3 ">
-          <label className="px-3 text-xs font-semibold uppercase text-gray-900">
+        <Divider sx={{ my: 1}} />
+
+        <List>
+          <Typography
+            variant="caption"
+            sx={{ textTransform: "uppercase", px: 2, color: "text.secondary" }}
+          >
             Support
-          </label>
-
-          <NavLink
-           onClick={toggleSidebar}
-            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+          </Typography>
+          <NavItem
             to="/contact-us"
-          >
-            <Headset className="h-5 w-5" aria-hidden="true" />
-            <span className="mx-2 text-sm font-medium">Contact us</span>
-          </NavLink>
+            icon={<Headset size={20} />}
+            label="Contact Us"
+          />
+          <ListItem disablePadding>
+            <ListItemButton onClick={logout} sx={{ px: 2 }}>
+              <ListItemIcon sx={{ minWidth: 36 }}>
+                <LogOut size={20} />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Drawer>
+    </>
+  );
+};
 
-          <NavLink
-           onClick={logout}
-            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-          >
-            <LogOut className="h-5 w-5" aria-hidden="true" />
-            <span className="mx-2 text-sm font-medium">Logout</span>
-          </NavLink>
-          
-        </div>
-      </nav>
-    </div>
-  </aside>
-  </>
-  )
-}
-
-export default Sidebar2
+export default Sidebar2;
