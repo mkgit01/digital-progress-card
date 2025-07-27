@@ -109,11 +109,11 @@ const Sidebar2 = ({ user }) => {
           <NavItem to="/" icon={<BarChart size={20} />} label="Dashboard" />
           <NavItem to="/task" icon={<Wallet size={20} />} label="Task" />
           <NavItem to="/rewards" icon={<Medal size={20} />} label="Rewards" />
-          <NavItem
+          {/* <NavItem
             to="/settings/account"
             icon={<Wrench size={20} />}
             label="Settings"
-          />
+          /> */}
         </List>
 
         <Divider sx={{ my: 1}} />

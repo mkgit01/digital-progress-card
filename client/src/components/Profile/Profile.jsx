@@ -1,228 +1,214 @@
 import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Card,
+  Stack,
+  Typography,
+  IconButton,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Select,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
+import {
+  Edit as EditIcon,
+  Logout as LogoutIcon,
+  LockReset as LockResetIcon,
+  Save as SaveIcon,
+  Cancel as CancelIcon,
+} from "@mui/icons-material";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import useAuth from "../Auth/useAuth";
 import { db } from "../../../firebaseConfig";
+import useAuth from "../Auth/useAuth";
 import UserProfile from "../Marginals/UserProfile";
-import "../../styles/settings.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFloppyDisk, faPenToSquare, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 const Profile = () => {
   const { user, handlePasswordReset, logout } = useAuth();
-  const [address, setAddress] = useState("N/A");
-  const [gender, setGender] = useState("N/A");
-  const [age, setAge] = useState("N/A");
-  const [about, setAbout] = useState("N/A");
-  const [email, setEmail] = useState("N/A");
-  const [phone, setPhone] = useState("N/A");
-  const [isEditing, setIsEditing] = useState(false);
-  const [ageError, setAgeError] = useState("");
-  
+
+  const [profileData, setProfileData] = useState({
+    address: "N/A",
+    gender: "N/A",
+    age: "N/A",
+    about: "N/A",
+    email: "N/A",
+    phone: "N/A",
+  });
+
   const [originalData, setOriginalData] = useState({});
+  const [ageError, setAgeError] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
-    // Fetch user data from Firestore on component mount
     const fetchUserProfile = async () => {
-      if (user && user.uid) {
-        console.log("Fetching data for user:", user.uid);
+      if (user?.uid) {
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
         if (userDoc.exists()) {
-          console.log("User data from Firestore:", userDoc.data());
-          const userData = userDoc.data();
-          setOriginalData(userData);  // Save the original data for cancel functionality
-          setAddress(userData.address || "Not provided");
-          setGender(userData.gender || "Not provided");
-          setAge(userData.age || "Not provided");
-          setAbout(userData.about || "Not provided");
-          setEmail(userData.email || "Not provided");
-          setPhone(userData.phone || "Not provided")
-        } else {
-          console.log("No user data found in Firestore for this UID");
+          const data = userDoc.data();
+          setOriginalData(data);
+          setProfileData({
+            address: data.address || "Not provided",
+            gender: data.gender || "Not provided",
+            age: data.age || "Not provided",
+            about: data.about || "Not provided",
+            email: data.email || "Not provided",
+            phone: data.phone || "Not provided",
+          });
         }
       }
     };
     fetchUserProfile();
   }, [user]);
 
-  const handleEdit = () => {
-    setIsEditing((edit) => !edit);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
   };
 
-  const handleCancel = () => {
-    // Reset form data to the original values
-    setAddress(originalData.address || "Not provided");
-    setGender(originalData.gender || "Not provided");
-    setAge(originalData.age || "Not provided");
-    setAbout(originalData.about || "Not provided");
-    setPhone(originalData.phone || "Not provided");
-    setIsEditing(false);
+  const handleCloseDialog = () => {
+    setProfileData(originalData);
     setAgeError("");
+    setOpenDialog(false);
   };
 
-  // Update the age value with validation
-  const handleAgeChange = (e) => {
+  const handleChange = (field) => (e) => {
     const value = e.target.value;
-    if (value === "") {
-      setAge("");
-      setAgeError("");
-      return;
+    if (field === "age") {
+      const ageNumber = Number(value);
+      if (value === "") {
+        setProfileData({ ...profileData, age: "" });
+        setAgeError("");
+        return;
+      }
+      if (ageNumber >= 1 && ageNumber <= 180) {
+        setAgeError("");
+      } else {
+        setAgeError("Age must be between 1 and 180");
+      }
     }
-
-    const ageNumber = Number(value);
-    if (ageNumber >= 1 && ageNumber <= 180) {
-      setAge(ageNumber);
-      setAgeError("");
-    } else {
-      setAgeError("Age must be between 1 and 180");
-    }
+    setProfileData({ ...profileData, [field]: value });
   };
 
   const handleSave = async () => {
-    setIsEditing(false);
+    if (ageError) return;
+    setOpenDialog(false);
     if (user) {
       const userRef = doc(db, "users", user.uid);
       await setDoc(userRef, {
-        address,
-        gender,
-        age,
-        about,
-        phone,
+        ...profileData,
       }, { merge: true });
+      setOriginalData(profileData);
     }
   };
 
   const confirmPasswordReset = () => {
-    const isConfirmed = window.confirm("Are you sure you want to reset your password?");
-    if (isConfirmed) {
-      console.log("reset email:",email);
+    if (window.confirm("Are you sure you want to reset your password?")) {
       handlePasswordReset();
     }
   };
 
   return (
-    <div className="profilePage p-4 h-screen flex flex-col sm:flex-row justify-center gap-4 items-center">
-      {/* Profile Block 1 */}
-      <div className="shadow-lg rounded-lg h-auto sm:h-96 w-full sm:w-1/2 leading-7">
-        <div className="flex justify-center items-center">
+    <Box sx={{ p: 3, display: "flex", justifyContent: "center" }}>
+      <Card sx={{ p: 4, width: "100%", maxWidth: 600 }}>
+        <Stack spacing={2} alignItems="center">
           <UserProfile />
-        </div>
-        <div className="flex justify-between m-4">
-          <div>
-            <p>
-              <strong>Email:</strong> {email}
-            </p>
-            {isEditing ? (
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="mt-2 px-2 py-1 border rounded ml-4"
-                placeholder="Phone Number"
+
+          <Typography variant="body1"><strong>Email:</strong> {profileData.email}</Typography>
+          <Typography variant="body1"><strong>Phone:</strong> {profileData.phone}</Typography>
+          <Typography variant="body1"><strong>Address:</strong> {profileData.address}</Typography>
+          <Typography variant="body1"><strong>Gender:</strong> {profileData.gender}</Typography>
+          <Typography variant="body1"><strong>Age:</strong> {profileData.age}</Typography>
+          <Typography variant="body1"><strong>About:</strong> {profileData.about}</Typography>
+
+          <Stack direction="row" spacing={2}>
+            <Tooltip title="Edit">
+              <IconButton onClick={handleOpenDialog} color="info">
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Reset Password">
+              <IconButton onClick={confirmPasswordReset} color="secondary">
+                <LockResetIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Log Out">
+              <IconButton onClick={logout} color="error">
+                <LogoutIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        </Stack>
+
+        {/* Edit Dialog */}
+        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+          <DialogTitle>Edit Profile</DialogTitle>
+          <DialogContent>
+            <Stack spacing={2} mt={1}>
+              <TextField
+                label="Phone"
+                value={profileData.phone}
+                onChange={handleChange("phone")}
               />
-            ) : (
-              <p>
-                <strong>Phone:</strong> {phone}
-              </p>
-            )}
-            <p>
-              <strong>Password: </strong>
-              <button
-                onClick={confirmPasswordReset}
-                className="text-blue-600"
+              <TextField
+                label="Address"
+                value={profileData.address}
+                onChange={handleChange("address")}
+              />
+              <Select
+                value={profileData.gender}
+                onChange={handleChange("gender")}
+                displayEmpty
               >
-                Reset Password
-              </button>
-            </p>
-          </div>
-          <div className="mt-16 sm:mt-0">
-            <button onClick={logout} className="btn rounded-md ">
-              <FontAwesomeIcon icon={faRightFromBracket} />
-            </button>
-            <span className="absolute -top-6 -right-2 bg-gray-700 text-white text-xs rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              Log Out
-            </span>
-          </div>
-        </div>
-      </div>
-      {/* Profile Block 2 */}
-      <div className="shadow-lg rounded-lg sm:h-96 w-full sm:w-1/2 leading-7">
-        {isEditing ? (
-          <>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="mt-4 px-2 py-1 border rounded ml-4"
-              placeholder="Address"
-            />
-            <select
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              className="mt-2 px-2 py-1 border rounded ml-4"
-            >
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-            <input
-              type="number"
-              value={age}
-              onChange={handleAgeChange}
-              className="mt-2 px-2 py-1 border rounded ml-4"
-              placeholder="Age"
-            />
-            {ageError && <p style={{ color: "red" }}>{ageError}</p>}
-            <textarea
-              value={about}
-              onChange={(e) => setAbout(e.target.value)}
-              className="editAbout px-2 py-1 border rounded m-4 h-40"
-              placeholder="About"
-            />
-            <button
-              onClick={handleSave}
-              className="btn m-4 rounded-md"
-            >
-              <FontAwesomeIcon icon={faFloppyDisk} />
-            </button>
-            <button
-              onClick={handleCancel}
-              className="btn m-4 rounded-md"
+                <MenuItem value="">Select Gender</MenuItem>
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </Select>
+              <TextField
+                label="Age"
+                type="number"
+                value={profileData.age}
+                onChange={handleChange("age")}
+                error={!!ageError}
+                helperText={ageError}
+              />
+              <TextField
+                label="About"
+                multiline
+                minRows={3}
+                value={profileData.about}
+                onChange={handleChange("about")}
+              />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button
+            variant="outlined"
+              startIcon={<CancelIcon />}
+              onClick={handleCloseDialog}
+              color="secondary"
             >
               Cancel
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="m-4 flex justify-between">
-              <div>
-                <p className="mt-4">
-                  <strong>Address:</strong> {address}
-                </p>
-                <p>
-                  <strong>Gender:</strong> {gender}
-                </p>
-                <p>
-                  <strong>Age:</strong> {age}
-                </p>
-              </div>
-              <div className="right-0 mt-4 md:mt-0 relative">
-                <button
-                  onClick={handleEdit}
-                  className="btn rounded-md"
-                >
-                  <FontAwesomeIcon icon={faPenToSquare} />{" "}
-                </button>
-              </div>
-            </div>
-            <div className="p-4">
-              <strong>About:</strong> {about}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+            </Button>
+            <Button
+              startIcon={<SaveIcon />}
+              onClick={handleSave}
+              variant="contained"
+              color="primary"
+              disabled={!!ageError}
+            >
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Card>
+    </Box>
   );
 };
 

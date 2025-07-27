@@ -27,13 +27,13 @@ const router = createBrowserRouter(
       <Route index element={<Dashboard />} />
       <Route path="login" element={<Login />} />
       <Route path="task" element={<TaskPage />} />
-      <Route path="create-task" element={<CreateTask />} />
+      {/* <Route path="create-task" element={<CreateTask />} /> */}
       <Route path="rewards" element={<Rewards />} />
       <Route path="profile" element={<Profile />} />
       <Route path="contact-us" element={<ContactPage />} />
-      <Route path="settings" element={<Settings />} />
-      <Route path="settings/account" element={<Account />} />
-      <Route path="settings/personalize" element={<Personalize />} />
+      {/* <Route path="settings" element={<Settings />} /> */}
+      {/* <Route path="settings/account" element={<Account />} /> */}
+      {/* <Route path="settings/personalize" element={<Personalize />} /> */}
       <Route path="*" element={<InvalidPage />} />
     </Route>
   )
