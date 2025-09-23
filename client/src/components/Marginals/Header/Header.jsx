@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Sidebar2 from "./Sidebar2";
-import "../../styles/toggleMode.css";
+import Sidebar from "../Sidebar";
+import "../../../styles/toggleMode.css";
 import {
   Avatar,
   Paper,
@@ -14,9 +14,10 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
-import useAuth from "../Auth/useAuth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
+import useAuth from "../../Auth/useAuth";
+import { ProfileButton } from "./Profile";
 
 const Header = ({ user }) => {
   const [mode, setMode] = useState(localStorage.getItem("mode") || "light");
@@ -69,14 +70,20 @@ const Header = ({ user }) => {
 
   return (
     <>
-      <Sidebar2 user={user} />
+      <Sidebar user={user} />
 
-      <div className="header flex items-center justify-between h-16 px-4 mb-1 top-0">
+      <div
+        className="header flex items-center justify-between h-16 px-4 mb-1 top-0"
+        style={{
+          background:
+            "linear-gradient(to right, black 25%, white 50%, black 75%)",
+        }}
+      >
         <div className="logo-holder m-auto">
           <Link to="/">
             <img
               className="logo-img object-cover"
-              src="/media/images/dpc-logo.png"
+              src="/media/images/dpc-logo2.png"
               alt="logo"
             />
           </Link>
@@ -105,53 +112,8 @@ const Header = ({ user }) => {
           <Typography variant="body1" color="#fff">
             Hi, {greetingName}
           </Typography>
-          <IconButton ref={anchorRef} onClick={handleProfileClick}>
-            <Avatar
-              alt="Profile"
-              src={user?.photoURL || "/media/images/user-profile.png"}
-              sx={{ width: 36, height: 36, border: "2px solid #fff" }}
-            />
-          </IconButton>
 
-          <Popper
-            open={open}
-            anchorEl={anchorRef.current}
-            placement="bottom-end"
-            disablePortal={false}
-            style={{ zIndex: 1300 }}
-          >
-            <ClickAwayListener onClickAway={handleCloseMenu}>
-              <Paper sx={{ mt: 1, minWidth: 160 }}>
-                <MenuList
-                  autoFocusItem={open}
-                  onKeyDown={(e) => {
-                    if (e.key === "Escape") handleCloseMenu();
-                  }}
-                  sx={{ p: 1, border: "1px solid black", borderRadius: 1 }}
-                >
-                  <Stack
-                    padding={1}
-                    direction="row"
-                    alignItems="center"
-                    justifyContent={"center"}
-                    color={"#fff"}
-                    bgcolor={"primary.main"}
-                  >
-                    <Typography variant="subtitle2">{truncatedName}</Typography>
-                  </Stack>
-                  <MenuItem onClick={handleProfileNavigate} sx={{ mt: 1 }}>
-                    <AccountCircleIcon fontSize="small" sx={{ mr: 1 }} />
-                    Profile
-                  </MenuItem>
-
-                  <MenuItem onClick={handleLogout} sx={{ mt: 1 }}>
-                    <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
-                    Logout
-                  </MenuItem>
-                </MenuList>
-              </Paper>
-            </ClickAwayListener>
-          </Popper>
+          <ProfileButton />
         </Box>
       </div>
     </>

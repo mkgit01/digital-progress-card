@@ -23,14 +23,14 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
   const { user } = useAuth();
   const [taskName, setTaskName] = useState("");
   const [target, setTarget] = useState("");
-  const [unit, setUnit] = useState("select");
+  const [unit, setUnit] = useState("");
   const [rewards, setRewards] = useState([]);
   const [error, setError] = useState("");
 
   const handleClose = () => {
     setTaskName("");
     setTarget("");
-    setUnit("select");
+    setUnit("");
     setRewards([]);
     setError("");
     onClose(); // closes the dialog
@@ -59,7 +59,7 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
   };
 
   const addReward = () => {
-    setRewards([...rewards, { unit: "select", name: "" }]);
+    setRewards([...rewards, { unit: "", name: "" }]);
   };
 
   const handleRewardChange = (index, field, value) => {
@@ -85,9 +85,6 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
         }}
       >
         Create Task
-        {/* <IconButton onClick={handleClose} size="small">
-          <CloseIcon />
-        </IconButton> */}
       </DialogTitle>
       <DialogContent dividers>
         <Box component="form" onSubmit={handleTaskSubmit} noValidate>
@@ -116,15 +113,24 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
+              {/* <FormControl fullWidth> */}
+
               <FormControl fullWidth>
-                <InputLabel>Unit</InputLabel>
-                <Select
-                  value={unit}
-                  label="Unit"
-                  onChange={(e) => setUnit(e.target.value)}
+                <InputLabel
+                  id="unit-label"
+                  sx={{ backgroundColor: "white", px: 1 }}
                   required
                 >
-                  <MenuItem value="select">Select</MenuItem>
+                  Unit
+                </InputLabel>
+                <Select
+                  labelId="unit-label"
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+                >
+                  <MenuItem value="" sx={{ color: "#585858ff" }}>
+                    Select Unit
+                  </MenuItem>
                   <MenuItem value="kg">Kilogram (kg)</MenuItem>
                   <MenuItem value="g">Gram (g)</MenuItem>
                   <MenuItem value="lb">Pound (lb)</MenuItem>
@@ -147,16 +153,18 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
               <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
                 <Grid size={{ xs: 6 }}>
                   <FormControl fullWidth>
-                    <InputLabel>Percentage</InputLabel>
+                    <InputLabel sx={{ backgroundColor: "white", px: 1 }}>
+                      Percentage
+                    </InputLabel>
                     <Select
                       value={reward.unit}
-                      label="Percentage"
-                      size="small"
                       onChange={(e) =>
                         handleRewardChange(index, "unit", e.target.value)
                       }
                     >
-                      <MenuItem value="select">Select</MenuItem>
+                      <MenuItem value="" sx={{ color: "#585858ff" }}>
+                        Select
+                      </MenuItem>
                       {[
                         "10%",
                         "20%",
@@ -178,9 +186,8 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
                 </Grid>
                 <Grid size={{ xs: 6 }}>
                   <TextField
-                    placeholder="Reward Name"
+                    label="Reward Name"
                     fullWidth
-                    size="small"
                     value={reward.name}
                     onChange={(e) =>
                       handleRewardChange(index, "name", e.target.value)

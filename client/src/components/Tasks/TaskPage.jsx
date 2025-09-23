@@ -10,25 +10,33 @@ import {
   ListItem,
   ListItemText,
   IconButton,
+  Divider,
 } from "@mui/material";
 import { FilePenLine, Trash2 } from "lucide-react";
 import "../../styles/taskPage.css";
 import CreateTaskDialog from "./CreateTask";
 import { deleteTask, getTasks } from "../../services/api";
 import useAuth from "../Auth/useAuth";
+import { useSnackbar } from "../../context/GlobalSnackbarProvider";
 
 const TaskPage = () => {
   const [tasks, setTasks] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const { user } = useAuth();
   const userId = user ? user.uid : null;
+  const { showSnackbar } = useSnackbar();
 
   const fetchUserTasks = async () => {
     try {
       const data = await getTasks(userId);
       setTasks(data);
+      showSnackbar("Tasks Found", "success");
     } catch (error) {
-      console.error("Failed to load tasks:", error.message);
+      showSnackbar(
+        error.response?.data?.message || "Failed to load tasks",
+        "error"
+      );
+      setTasks([]);
     }
   };
 
@@ -39,7 +47,7 @@ const TaskPage = () => {
   }, [userId]);
 
   const handleEditTask = (index) => {
-    console.log("Edit task", index);
+    return;
   };
 
   const handleDeleteTask = async (index) => {
@@ -48,11 +56,19 @@ const TaskPage = () => {
       const response = await deleteTask(taskId);
       if (response.status === 200) {
         await fetchUserTasks();
+        showSnackbar(
+          response?.data?.message || "Task has been deleted successfully",
+          "success"
+        );
       } else {
-        console.log("Delete failed:", response.data?.message);
+        showSnackbar(response?.data?.message || "Delete failed!", "warning");
       }
     } catch (error) {
       console.log("Failed to delete task:", error.message);
+      showSnackbar(
+        error.response?.data?.message || "Failed to load tasks",
+        "error"
+      );
     }
   };
   const handleTaskCreated = () => {
@@ -98,7 +114,7 @@ const TaskPage = () => {
               </Button>
             </Box>
 
-            <Paper elevation={3}>
+            <Paper elevation={0}>
               <List>
                 {tasks.map((task, index) => (
                   <ListItem
@@ -110,6 +126,8 @@ const TaskPage = () => {
                           color="primary"
                           onClick={() => handleEditTask(index)}
                           disabled
+                          size="small"
+                          sx={{ textTransform: "none" }}
                         >
                           Edit
                         </Button>
@@ -117,34 +135,64 @@ const TaskPage = () => {
                           variant="outlined"
                           color="error"
                           onClick={() => handleDeleteTask(index)}
+                          size="small"
+                          sx={{ textTransform: "none" }}
                         >
                           Delete
                         </Button>
                       </Stack>
                     }
                   >
-                    <Stack direction="row" spacing={4} alignItems="center">
+                    <Stack
+                      direction={{ sm: "column", md: "row" }}
+                      spacing={4}
+                      alignItems={{ sm: "flex-start", md: "center" }}
+                    >
                       <ListItemText
                         sx={{ minWidth: "100px" }}
                         primary={
-                          <strong>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
+                            fontWeight="bold"
+                          >
                             {task.title || task.name || "Untitled Task"}
-                          </strong>
+                          </Typography>
                         }
                       />
                       <ListItemText
                         sx={{ minWidth: "100px" }}
                         primary={
-                          task.target && task.unit
-                            ? `${task.target} ${task.unit}`
-                            : "Target not set"
+                          <Typography
+                            sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
+                          >
+                            {task.target && task.unit
+                              ? `${task.target} ${task.unit}`
+                              : "Target not set"}
+                          </Typography>
+                        }
+                      />
+                      <ListItemText
+                        sx={{ minWidth: "100px" }}
+                        primary={
+                          <Typography
+                            sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
+                          >
+                            {task.rewards.length
+                              ? `Rewards: ${task.rewards.length}`
+                              : "No Rewards"}
+                          </Typography>
                         }
                       />
                       <ListItemText
                         primary={
-                          task.progress?.length
-                            ? `Progress: ${task.progress.length}`
-                            : "No progress yet"
+                          <Typography
+                            sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
+                          >
+                            {task.progress?.length
+                              ? `Progress: ${task.progress.length}`
+                              : "No progress yet"}
+                          </Typography>
                         }
                       />
                     </Stack>
