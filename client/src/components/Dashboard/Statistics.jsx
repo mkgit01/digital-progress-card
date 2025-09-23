@@ -9,93 +9,215 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import {
+  Box,
+  Typography,
+  Select,
+  MenuItem,
+  useMediaQuery,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
-const userProgress = [
-  { name: "Task 1", progress: 40, period: "weekly" },
-  { name: "Task 2", progress: 10, period: "weekly" },
-  { name: "Task 3", progress: 70, period: "monthly" },
-  { name: "Task 4", progress: 50, period: "monthly" },
-  { name: "Task 5", progress: 84, period: "yearly" },
-  { name: "Task 6", progress: 90, period: "yearly" },
-  { name: "Task 7", progress: 60, period: "weekly" },
-  { name: "Task 8", progress: 33, period: "monthly" },
-  { name: "Task 9", progress: 20, period: "monthly" },
-  { name: "Task 10", progress: 100, period: "yearly" },
-  { name: "Task 11", progress: 90, period: "weekly" },
-  { name: "Task 12", progress: 60, period: "weekly" },
+// Example static tasks array (to be replaced by API response later)
+const tasks = [
+  { taskId: "id6543657", taskName: "Task 1" },
+  { taskId: "id9876543", taskName: "Task 2" },
+  { taskId: "id1234567", taskName: "Task 3" },
 ];
+
+// Example task progress data (each task has ONE type of progress array)
+const taskProgressData = {
+  id6543657: {
+    taskId: "id6543657",
+    taskName: "Task 1",
+    createdDate: "dummy date",
+    updatedDate: "dummy yummy date",
+    weeklyProgress: [
+      { day: "2025-09-01", progress: 10 },
+      { day: "2025-09-08", progress: 50 },
+      { day: "2025-09-15", progress: 15 },
+      { day: "2025-09-22", progress: 40 },
+      { day: "2025-09-29", progress: 90 },
+      { day: "2025-10-06", progress: 65 },
+      { day: "2025-10-13", progress: 85 },
+    ],
+
+    monthlyProgress: [
+      { day: "2025-01-01", progress: 84 },
+      { day: "2025-02-01", progress: 90 },
+      { day: "2025-03-01", progress: 65 },
+      { day: "2025-04-01", progress: 70 },
+      { day: "2025-05-01", progress: 55 },
+      { day: "2025-06-01", progress: 95 },
+      { day: "2025-07-01", progress: 78 },
+      { day: "2025-08-01", progress: 60 },
+      { day: "2025-09-01", progress: 88 },
+      { day: "2025-10-01", progress: 72 },
+      { day: "2025-11-01", progress: 81 },
+      { day: "2025-12-01", progress: 93 },
+    ],
+
+    yearlyProgress: [
+      { day: "2022-01-01", progress: 45 },
+      { day: "2023-01-01", progress: 55 },
+      { day: "2024-01-01", progress: 60 },
+      { day: "2025-01-01", progress: 80 },
+      { day: "2026-01-01", progress: 92 },
+    ],
+  },
+  // id9876543: {
+  //   taskId: "id9876543",
+  //   taskName: "Task 2",
+  //   createdDate: "dummy date",
+  //   updatedDate: "dummy yummy date",
+  //   weeklyProgress: [
+  //     { name: "Week 1", progress: 20 },
+  //     { name: "Week 2", progress: 50 },
+  //     { name: "Week 3", progress: 75 },
+  //   ],
+  // },
+  // id1234567: {
+  //   taskId: "id1234567",
+  //   taskName: "Task 3",
+  //   createdDate: "dummy date",
+  //   updatedDate: "dummy yummy date",
+  //   monthlyProgress: [
+  //     { name: "Jan", progress: 84 },
+  //     { name: "Feb", progress: 90 },
+  //     { name: "Mar", progress: 65 },
+  //   ],
+  // },
+};
+
+// Utility to get correct progress array
+const getProgressData = (task, period) => {
+  if (!task) return [];
+  switch (period) {
+    case "weekly":
+      return task.weeklyProgress || [];
+    case "monthly":
+      return task.monthlyProgress || [];
+    case "yearly":
+      return task.yearlyProgress || [];
+    default:
+      return [];
+  }
+};
 
 const Statistics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("weekly");
+  const [selectedTask, setSelectedTask] = useState(tasks[0]?.taskId || "");
 
-  const filteredProgress = userProgress.filter(
-    (task) => task.period === selectedPeriod
-  );
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMd = useMediaQuery(theme.breakpoints.down("md"));
+
+  const task = taskProgressData[selectedTask];
+  const filteredProgress = getProgressData(task, selectedPeriod);
   const hasTasks = filteredProgress.length > 0;
-  const chartWidth = Math.max(filteredProgress.length * 150, 750);
+
+  const chartHeight = isSm ? 250 : 300;
 
   return (
-    <div className="place-holder-stat sm:col-span-2 sm:w-4/5 w-11/12 place-items-center max-w-[100%]  p-1">
+    <Box
+      sx={{
+        px: { xs: 0, md: 2 },
+        pb: { xs: 0, md: 2 },
+        width: "100%",
+        mx: "auto",
+        textAlign: "center",
+      }}
+    >
       {hasTasks ? (
-        <div className="w-full">
-          <h2 className="text-xl font-semibold mb-4 text-center">
-            Task Progress ({selectedPeriod})
-          </h2>
-          <div className="overflow-x-auto scrollbar-hide">
-            <div style={{ width: `${chartWidth}px`, height: "300px" }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={filteredProgress}>
-                  <defs>
-                    <linearGradient
-                      id="progressFill"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#000000" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#000000" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis domain={[0, 100]} />
-                  <Tooltip />
-                  <Area
-                    type="monotone"
-                    dataKey="progress"
-                    stroke="#000000"
-                    fillOpacity={1}
-                    fill="url(#progressFill)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
+        <>
+          <Typography variant="h6" fontWeight="bold" gutterBottom>
+            {`Task Progress (${selectedPeriod}) - ${
+              tasks.find((t) => t.taskId === selectedTask)?.taskName || ""
+            }`}
+          </Typography>
+
+          <Box sx={{ width: "100%", height: chartHeight, ml: {xs:-3, md:0} }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={filteredProgress}>
+                <defs>
+                  <linearGradient id="progressFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#1976d2" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#1976d2" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                <XAxis dataKey="day" />
+                <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} />
+                <Tooltip />
+                <Area
+                  type="monotone"
+                  dataKey="progress"
+                  stroke="#1976d2"
+                  fillOpacity={1}
+                  fill="url(#progressFill)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </Box>
+        </>
       ) : (
-        <div className="select-none grid place-items-center text-center">
-          <Link to="/task">
-            <div className="add-tsk rounded-full grid place-items-center text-3xl">
-              +
-            </div>
-          </Link>
-          No tasks found for this period
-        </div>
+        <>
+          <Typography variant="h6" fontWeight="bold" gutterBottom>
+            {`Task Progress (${selectedPeriod}) - ${
+              tasks.find((t) => t.taskId === selectedTask)?.taskName || ""
+            }`}
+          </Typography>
+
+          <Box sx={{ width: "100%", height: chartHeight }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={filteredProgress}>
+                <XAxis dataKey="day" />
+                <YAxis domain={[0, 100]} />
+
+                {filteredProgress.length === 0 && (
+                  <text
+                    x="50%"
+                    y="50%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="#888"
+                    fontSize={16}
+                  >
+                    No progress found for this period
+                  </text>
+                )}
+              </AreaChart>
+            </ResponsiveContainer>
+          </Box>
+        </>
       )}
 
-      <select
+      {/* Period Selector */}
+      <Select
         value={selectedPeriod}
         onChange={(e) => setSelectedPeriod(e.target.value)}
-        className="filter mt-4"
-        name="filter"
-        id="sort"
+        sx={{ mt: 3, minWidth: 120, mr: 2 }}
+        size="small"
       >
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
-        <option value="yearly">Yearly</option>
-      </select>
-    </div>
+        <MenuItem value="weekly">Weekly</MenuItem>
+        <MenuItem value="monthly">Monthly</MenuItem>
+        <MenuItem value="yearly">Yearly</MenuItem>
+      </Select>
+
+      {/* Task Selector */}
+      <Select
+        value={selectedTask}
+        onChange={(e) => setSelectedTask(e.target.value)}
+        sx={{ mt: 3, minWidth: 160 }}
+        size="small"
+      >
+        {tasks.map((task) => (
+          <MenuItem key={task.taskId} value={task.taskId}>
+            {task.taskName}
+          </MenuItem>
+        ))}
+      </Select>
+    </Box>
   );
 };
 

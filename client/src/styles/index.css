@@ -13,6 +13,16 @@
     --third-font: 'Ubuntu', sans-serif;
     background-color: #fff;
 }
+
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* For WebKit browsers (Chrome, Safari, Opera) */
+*::-webkit-scrollbar {
+  display: none;
+}
 /* .light{
     --primary-color:#1A1A1A;
     --text:black;
