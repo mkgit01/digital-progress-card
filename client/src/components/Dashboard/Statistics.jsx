@@ -91,7 +91,6 @@ const taskProgressData = {
   },
 };
 
-
 // Utility to get correct progress array
 const getProgressData = (task, period) => {
   if (!task) return [];
@@ -139,7 +138,9 @@ const Statistics = () => {
             }`}
           </Typography>
           {filteredProgress.length === 0 ? (
-            <Box sx={{ width: "100%", height: chartHeight, ml: { xs: -3, md: 0 } }}>
+            <Box
+              sx={{ width: "100%", height: chartHeight, ml: { xs: -3, md: 0 } }}
+            >
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={filteredProgress}>
                   <XAxis dataKey="day" />
@@ -212,7 +213,7 @@ const Statistics = () => {
           <Fab
             color="primary"
             component={Link}
-            to="/tasks"
+            to="/task"
             sx={{ mt: 3 }}
             aria-label="add"
           >
@@ -240,11 +241,15 @@ const Statistics = () => {
         sx={{ mt: 3, minWidth: 160 }}
         size="small"
       >
-        {tasks.map((task) => (
-          <MenuItem key={task.taskId} value={task.taskId}>
-            {task.taskName}
-          </MenuItem>
-        ))}
+        {tasks.length === 0 ? (
+          <MenuItem value="">No Tasks</MenuItem>
+        ) : (
+          tasks.map((task) => (
+            <MenuItem key={task.taskId} value={task.taskId}>
+              {task.taskName}
+            </MenuItem>
+          ))
+        )}
       </Select>
     </Box>
   );
