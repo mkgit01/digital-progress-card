@@ -14,10 +14,14 @@ const app = express();
 connectDB();
 
 const corsOptions = {
-  origin:'http://localhost:5173',
-  methods:'GET, POST, PUT, DELETE, PATCH, HEAD',
-  credentials:true,
-}
+  origin: [
+    "http://localhost:5173",
+    "https://digital-progress-card-1.onrender.com"
+  ],
+  methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
+  credentials: true,
+};
+
 // Middlewares
 app.use(cors(corsOptions));
 app.use(express.json());
