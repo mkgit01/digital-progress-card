@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AreaChart,
@@ -15,8 +15,10 @@ import {
   Select,
   MenuItem,
   useMediaQuery,
+  Fab,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import AddIcon from "@mui/icons-material/Add";
 
 // Example static tasks array (to be replaced by API response later)
 const tasks = [
@@ -65,29 +67,30 @@ const taskProgressData = {
       { day: "2026-01-01", progress: 92 },
     ],
   },
-  // id9876543: {
-  //   taskId: "id9876543",
-  //   taskName: "Task 2",
-  //   createdDate: "dummy date",
-  //   updatedDate: "dummy yummy date",
-  //   weeklyProgress: [
-  //     { name: "Week 1", progress: 20 },
-  //     { name: "Week 2", progress: 50 },
-  //     { name: "Week 3", progress: 75 },
-  //   ],
-  // },
-  // id1234567: {
-  //   taskId: "id1234567",
-  //   taskName: "Task 3",
-  //   createdDate: "dummy date",
-  //   updatedDate: "dummy yummy date",
-  //   monthlyProgress: [
-  //     { name: "Jan", progress: 84 },
-  //     { name: "Feb", progress: 90 },
-  //     { name: "Mar", progress: 65 },
-  //   ],
-  // },
+  id9876543: {
+    taskId: "id9876543",
+    taskName: "Task 2",
+    createdDate: "dummy date",
+    updatedDate: "dummy yummy date",
+    weeklyProgress: [
+      { day: "2022-01-01", progress: 20 },
+      { day: "2022-01-08", progress: 50 },
+      { day: "2022-01-015", progress: 75 },
+    ],
+  },
+  id1234567: {
+    taskId: "id1234567",
+    taskName: "Task 3",
+    createdDate: "dummy date",
+    updatedDate: "dummy yummy date",
+    monthlyProgress: [
+      { day: "2022-02-01", progress: 84 },
+      { day: "2022-03-01", progress: 90 },
+      { day: "2022-04-01", progress: 65 },
+    ],
+  },
 };
+
 
 // Utility to get correct progress array
 const getProgressData = (task, period) => {
@@ -114,7 +117,7 @@ const Statistics = () => {
 
   const task = taskProgressData[selectedTask];
   const filteredProgress = getProgressData(task, selectedPeriod);
-  const hasTasks = filteredProgress.length > 0;
+  const hasTasks = tasks.length > 0;
 
   const chartHeight = isSm ? 250 : 300;
 
@@ -135,61 +138,87 @@ const Statistics = () => {
               tasks.find((t) => t.taskId === selectedTask)?.taskName || ""
             }`}
           </Typography>
+          {filteredProgress.length === 0 ? (
+            <Box sx={{ width: "100%", height: chartHeight, ml: { xs: -3, md: 0 } }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={filteredProgress}>
+                  <XAxis dataKey="day" />
+                  <YAxis domain={[0, 100]} />
 
-          <Box sx={{ width: "100%", height: chartHeight, ml: {xs:-3, md:0} }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={filteredProgress}>
-                <defs>
-                  <linearGradient id="progressFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1976d2" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#1976d2" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                <XAxis dataKey="day" />
-                <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} />
-                <Tooltip />
-                <Area
-                  type="monotone"
-                  dataKey="progress"
-                  stroke="#1976d2"
-                  fillOpacity={1}
-                  fill="url(#progressFill)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </Box>
+                  {filteredProgress.length === 0 && (
+                    <text
+                      x="50%"
+                      y="50%"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="#888"
+                      fontSize={16}
+                    >
+                      No progress found for this period
+                    </text>
+                  )}
+                </AreaChart>
+              </ResponsiveContainer>
+            </Box>
+          ) : (
+            <Box
+              sx={{ width: "100%", height: chartHeight, ml: { xs: -3, md: 0 } }}
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={filteredProgress}>
+                  <defs>
+                    <linearGradient
+                      id="progressFill"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop offset="5%" stopColor="#1976d2" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#1976d2" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                  <XAxis dataKey="day" />
+                  <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} />
+                  <Tooltip />
+                  <Area
+                    type="monotone"
+                    dataKey="progress"
+                    stroke="#1976d2"
+                    fillOpacity={1}
+                    fill="url(#progressFill)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </Box>
+          )}
         </>
       ) : (
-        <>
+        <Box
+          sx={{
+            textAlign: "center",
+            py: 5,
+            px: 2,
+          }}
+        >
           <Typography variant="h6" fontWeight="bold" gutterBottom>
-            {`Task Progress (${selectedPeriod}) - ${
-              tasks.find((t) => t.taskId === selectedTask)?.taskName || ""
-            }`}
+            No tasks found
+          </Typography>
+          <Typography variant="body1" color="text.secondary" gutterBottom>
+            Try adding one to see your progress.
           </Typography>
 
-          <Box sx={{ width: "100%", height: chartHeight }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={filteredProgress}>
-                <XAxis dataKey="day" />
-                <YAxis domain={[0, 100]} />
-
-                {filteredProgress.length === 0 && (
-                  <text
-                    x="50%"
-                    y="50%"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="#888"
-                    fontSize={16}
-                  >
-                    No progress found for this period
-                  </text>
-                )}
-              </AreaChart>
-            </ResponsiveContainer>
-          </Box>
-        </>
+          <Fab
+            color="primary"
+            component={Link}
+            to="/tasks"
+            sx={{ mt: 3 }}
+            aria-label="add"
+          >
+            <AddIcon />
+          </Fab>
+        </Box>
       )}
 
       {/* Period Selector */}

@@ -8,31 +8,55 @@ const Dashboard = () => {
       <Grid container spacing={2} justifyContent="center">
         <Grid size={{ xs: 12, md: 8 }}>
           <Statistics />
+          <Box
+            sx={{
+              display: {xs:"none",md:"flex"},
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              component="form"
+              sx={{
+                mt: 3,
+                width: "100%",
+                maxWidth: { xs: "250px", md: "500px" },
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+              }}
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <TextField fullWidth label="Total work done today" size="small" />
+              <Button variant="contained" type="submit">
+                Submit
+              </Button>
+            </Box>
+          </Box>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           <RewardProgress />
         </Grid>
       </Grid>
-
       <Box
         sx={{
-          display: "flex",
+          display: {xs:"flex",md:"none"},
           justifyContent: "center",
         }}
       >
         <Box
           component="form"
           sx={{
-            mt:3,
+            mt: 3,
             width: "100%",
-            maxWidth: {xs:"250px",md:"500px"},
+            px:2.5,
+            // maxWidth: { xs: "350px", md: "500px" },
             display: "flex",
             flexDirection: "column",
             gap: 1,
           }}
           onSubmit={(e) => e.preventDefault()}
         >
-          <TextField fullWidth label="Total work done today" size="small"/>
+          <TextField fullWidth label="Total work done today" size="small" />
           <Button variant="contained" type="submit">
             Submit
           </Button>
