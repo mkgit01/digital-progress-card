@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../firebaseConfig'
-import Header from './Marginals/Header'
 import Footer from './Marginals/Footer'
 import {Outlet, useNavigate} from 'react-router-dom'
 import '../styles/index.css'
 import Login from './Auth/Login'
+import Header from './Marginals/Header/Header.jsx'
 
 function Layout() {
   const [loggedIn, setLoggedIn] = useState(false)

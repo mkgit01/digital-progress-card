@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import taskRoutes from './routes/taskRoutes.js'
+import progressRoutes from './routes/progressRoutes.js'
+import rewardRoutes from './routes/rewardRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -14,14 +16,20 @@ const app = express();
 connectDB();
 
 const corsOptions = {
-  origin:'http://localhost:5173',
-  methods:'GET, POST, PUT, DELETE, PATCH, HEAD',
-  credentials:true,
-}
+  origin: [
+    "http://localhost:5173",
+    "https://digital-progress-card-1.onrender.com"
+  ],
+  methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
+  credentials: true,
+};
+
 // Middlewares
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/api',taskRoutes);
+app.use('/api',progressRoutes);
+app.use("/api/rewards", rewardRoutes);
 app.use((req, res, next) => {
   console.log(`Request received: ${req.method} ${req.url}`);
   next();

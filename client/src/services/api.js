@@ -6,6 +6,7 @@ export const createTask = async (taskData) => {
     console.log("client-taskData:", taskData);
     const response = await axios.post(
       "http://localhost:5000/api/tasks",
+      // "https://digital-progress-card.onrender.com/api/tasks",
       taskData
     );
     if (response && response.data) {
@@ -25,7 +26,11 @@ export const createTask = async (taskData) => {
 // Get task api hit
 export const getTasks = async (userId) => {
   try {
-    const response = await axios.get("http://localhost:5000/api/tasks", {
+    const response = await axios.get(
+      "http://localhost:5000/api/tasks",
+      // "https://digital-progress-card.onrender.com/api/tasks",
+
+       {
       params: { userId },
     });
     console.log("Tasks fetched successfully:", response.data);
@@ -40,6 +45,8 @@ export const deleteTask = async (taskId) => {
   try {
     const response = await axios.delete(
       `http://localhost:5000/api/tasks/${taskId}`
+      // `https://digital-progress-card.onrender.com/api/tasks/${taskId}`,
+
     );
     return response;
   } catch (error) {

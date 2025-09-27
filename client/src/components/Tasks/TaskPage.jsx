@@ -10,36 +10,54 @@ import {
   ListItem,
   ListItemText,
   IconButton,
+  Divider,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Tooltip,
 } from "@mui/material";
 import { FilePenLine, Trash2 } from "lucide-react";
 import "../../styles/taskPage.css";
 import CreateTaskDialog from "./CreateTask";
 import { deleteTask, getTasks } from "../../services/api";
 import useAuth from "../Auth/useAuth";
+import { useSnackbar } from "../../context/GlobalSnackbarProvider";
 
 const TaskPage = () => {
   const [tasks, setTasks] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const { user } = useAuth();
   const userId = user ? user.uid : null;
+  const { showSnackbar } = useSnackbar();
 
   const fetchUserTasks = async () => {
     try {
       const data = await getTasks(userId);
       setTasks(data);
     } catch (error) {
-      console.error("Failed to load tasks:", error.message);
+      showSnackbar(
+        error.response?.data?.message || "Failed to load tasks",
+        "error"
+      );
+      setTasks([]);
     }
   };
 
   useEffect(() => {
     if (userId) {
-      fetchUserTasks();
+      try {
+        fetchUserTasks();
+        showSnackbar("Tasks Found", "success");
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, [userId]);
 
   const handleEditTask = (index) => {
-    console.log("Edit task", index);
+    return;
   };
 
   const handleDeleteTask = async (index) => {
@@ -48,11 +66,19 @@ const TaskPage = () => {
       const response = await deleteTask(taskId);
       if (response.status === 200) {
         await fetchUserTasks();
+        showSnackbar(
+          response?.data?.message || "Task has been deleted successfully",
+          "success"
+        );
       } else {
-        console.log("Delete failed:", response.data?.message);
+        showSnackbar(response?.data?.message || "Delete failed!", "warning");
       }
     } catch (error) {
       console.log("Failed to delete task:", error.message);
+      showSnackbar(
+        error.response?.data?.message || "Failed to load tasks",
+        "error"
+      );
     }
   };
   const handleTaskCreated = () => {
@@ -92,65 +118,86 @@ const TaskPage = () => {
           </Stack>
         ) : (
           <>
-            <Box display="flex" justifyContent="flex-end" mb={2}>
+            <Stack
+              direction={"row"}
+              justifyContent="space-between"
+              mb={2}
+              alignItems={"center"}
+            >
+              <Typography variant="h6">Tasks</Typography>
               <Button variant="contained" onClick={() => setOpenDialog(true)}>
                 Add Task
               </Button>
-            </Box>
+            </Stack>
 
-            <Paper elevation={3}>
-              <List>
-                {tasks.map((task, index) => (
-                  <ListItem
-                    key={index}
-                    secondaryAction={
-                      <Stack direction="row" spacing={1}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => handleEditTask(index)}
-                          disabled
+            <Paper elevation={0} sx={{ overflowX: "auto" }}>
+              <Table sx={{ borderCollapse: "separate" }}>
+                <TableBody>
+                  {tasks.map((task, index) => (
+                    <TableRow key={index} sx={{ borderBottom: "none" }}>
+                      <TableCell sx={{ borderBottom: "none" }}>
+                        <Typography
+                          sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
                         >
-                          Edit
-                        </Button>
+                          {task.title || task.name || "Untitled Task"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell sx={{ borderBottom: "none" }}>
+                        <Typography
+                          sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
+                        >
+                          {task.target && task.unit
+                            ? `${task.target} ${task.unit}`
+                            : "Target not set"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell sx={{ borderBottom: "none" }}>
+                        <Typography
+                          sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
+                        >
+                          {task.rewards.length
+                            ? `Rewards: ${task.rewards.length}`
+                            : "No Rewards"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          maxWidth: { xs: "", md: 100 },
+                          borderBottom: "none",
+                        }}
+                      >
+                        <Tooltip title="Not Available Right Now">
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => handleEditTask(index)}
+                            // disabled
+                            size="small"
+                            sx={{
+                              textTransform: "none",
+                              mr: 1,
+                              color: "grey.400",
+                              borderColor: "grey.400",
+                              cursor: "default",
+                            }}
+                          >
+                            Edit
+                          </Button>
+                        </Tooltip>
                         <Button
                           variant="outlined"
                           color="error"
                           onClick={() => handleDeleteTask(index)}
+                          size="small"
+                          sx={{ textTransform: "none" }}
                         >
                           Delete
                         </Button>
-                      </Stack>
-                    }
-                  >
-                    <Stack direction="row" spacing={4} alignItems="center">
-                      <ListItemText
-                        sx={{ minWidth: "100px" }}
-                        primary={
-                          <strong>
-                            {task.title || task.name || "Untitled Task"}
-                          </strong>
-                        }
-                      />
-                      <ListItemText
-                        sx={{ minWidth: "100px" }}
-                        primary={
-                          task.target && task.unit
-                            ? `${task.target} ${task.unit}`
-                            : "Target not set"
-                        }
-                      />
-                      <ListItemText
-                        primary={
-                          task.progress?.length
-                            ? `Progress: ${task.progress.length}`
-                            : "No progress yet"
-                        }
-                      />
-                    </Stack>
-                  </ListItem>
-                ))}
-              </List>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Paper>
           </>
         )}

@@ -21,14 +21,13 @@ export const createTask = async (req, res) => {
 
 // Fetch tasks for a user
 export const getTasks = async (req, res) => {
-  const userId = req.query.userId || req.body.userId; // Flexible to support query or body input
+  const userId = req.query.userId || req.body.userId;
   
   if (!userId) {
     return res.status(400).json({ message: 'User ID is required' });
   }
 
   try {
-    // Fetch tasks for the given userId
     const tasks = await Task.find({ userId });
     if (!tasks || tasks.length === 0) {
       return res.status(404).json({ message: 'No tasks found for this user' });

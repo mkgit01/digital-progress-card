@@ -3,22 +3,18 @@ import {
   Box,
   Card,
   Stack,
-  Typography,
+  TextField,
   IconButton,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
   Select,
   MenuItem,
   Tooltip,
+  Grid,
 } from "@mui/material";
 import {
   Edit as EditIcon,
-  Logout as LogoutIcon,
   LockReset as LockResetIcon,
+  Logout as LogoutIcon,
   Save as SaveIcon,
   Cancel as CancelIcon,
 } from "@mui/icons-material";
@@ -27,7 +23,7 @@ import { db } from "../../../firebaseConfig";
 import useAuth from "../Auth/useAuth";
 import UserProfile from "../Marginals/UserProfile";
 
-const Profile = () => {
+const AnimatedProfileCard = () => {
   const { user, handlePasswordReset, logout } = useAuth();
 
   const [profileData, setProfileData] = useState({
@@ -41,7 +37,7 @@ const Profile = () => {
 
   const [originalData, setOriginalData] = useState({});
   const [ageError, setAgeError] = useState("");
-  const [openDialog, setOpenDialog] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -65,16 +61,6 @@ const Profile = () => {
     fetchUserProfile();
   }, [user]);
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setProfileData(originalData);
-    setAgeError("");
-    setOpenDialog(false);
-  };
-
   const handleChange = (field) => (e) => {
     const value = e.target.value;
     if (field === "age") {
@@ -95,14 +81,18 @@ const Profile = () => {
 
   const handleSave = async () => {
     if (ageError) return;
-    setOpenDialog(false);
+    setEditMode(false);
     if (user) {
       const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, {
-        ...profileData,
-      }, { merge: true });
+      await setDoc(userRef, { ...profileData }, { merge: true });
       setOriginalData(profileData);
     }
+  };
+
+  const handleCancel = () => {
+    setProfileData(originalData);
+    setAgeError("");
+    setEditMode(false);
   };
 
   const confirmPasswordReset = () => {
@@ -112,104 +102,115 @@ const Profile = () => {
   };
 
   return (
-    <Box sx={{ p: 3, display: "flex", justifyContent: "center" }}>
-      <Card sx={{ p: 4, width: "100%", maxWidth: 600 }}>
-        <Stack spacing={2} alignItems="center">
-          <UserProfile />
+    <Stack spacing={3} alignItems="center" p={{ xs: 3, md: 0 }}>
+      <UserProfile />
 
-          <Typography variant="body1"><strong>Email:</strong> {profileData.email}</Typography>
-          <Typography variant="body1"><strong>Phone:</strong> {profileData.phone}</Typography>
-          <Typography variant="body1"><strong>Address:</strong> {profileData.address}</Typography>
-          <Typography variant="body1"><strong>Gender:</strong> {profileData.gender}</Typography>
-          <Typography variant="body1"><strong>Age:</strong> {profileData.age}</Typography>
-          <Typography variant="body1"><strong>About:</strong> {profileData.about}</Typography>
-
-          <Stack direction="row" spacing={2}>
-            <Tooltip title="Edit">
-              <IconButton onClick={handleOpenDialog} color="info">
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title="Reset Password">
-              <IconButton onClick={confirmPasswordReset} color="secondary">
-                <LockResetIcon />
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title="Log Out">
-              <IconButton onClick={logout} color="error">
-                <LogoutIcon />
-              </IconButton>
-            </Tooltip>
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <Stack spacing={2}>
+            <TextField
+              fullWidth
+              label="Email"
+              value={profileData.email}
+              disabled
+            />
+            <TextField
+              fullWidth
+              label="Phone"
+              value={profileData.phone}
+              onChange={handleChange("phone")}
+              disabled={!editMode}
+            />
           </Stack>
-        </Stack>
+        </Grid>
 
-        {/* Edit Dialog */}
-        <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-          <DialogTitle>Edit Profile</DialogTitle>
-          <DialogContent>
-            <Stack spacing={2} mt={1}>
-              <TextField
-                label="Phone"
-                value={profileData.phone}
-                onChange={handleChange("phone")}
-              />
-              <TextField
-                label="Address"
-                value={profileData.address}
-                onChange={handleChange("address")}
-              />
-              <Select
-                value={profileData.gender}
-                onChange={handleChange("gender")}
-                displayEmpty
-              >
-                <MenuItem value="">Select Gender</MenuItem>
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
-              </Select>
-              <TextField
-                label="Age"
-                type="number"
-                value={profileData.age}
-                onChange={handleChange("age")}
-                error={!!ageError}
-                helperText={ageError}
-              />
-              <TextField
-                label="About"
-                multiline
-                minRows={3}
-                value={profileData.about}
-                onChange={handleChange("about")}
-              />
-            </Stack>
-          </DialogContent>
-          <DialogActions>
-            <Button
-            variant="outlined"
-              startIcon={<CancelIcon />}
-              onClick={handleCloseDialog}
-              color="secondary"
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <Stack spacing={2}>
+            <Select
+              fullWidth
+              value={profileData.gender}
+              onChange={handleChange("gender")}
+              displayEmpty
+              disabled={!editMode}
             >
-              Cancel
-            </Button>
-            <Button
-              startIcon={<SaveIcon />}
-              onClick={handleSave}
-              variant="contained"
-              color="primary"
-              disabled={!!ageError}
-            >
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Card>
-    </Box>
+              <MenuItem value="">Select Gender</MenuItem>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+            <TextField
+              fullWidth
+              label="Age"
+              type="number"
+              value={profileData.age}
+              onChange={handleChange("age")}
+              error={!!ageError}
+              helperText={ageError}
+              disabled={!editMode}
+            />
+          </Stack>
+        </Grid>
+        <Grid size={12}>
+          <Stack spacing={2}>
+            <TextField
+              fullWidth
+              label="Address"
+              value={profileData.address}
+              onChange={handleChange("address")}
+              disabled={!editMode}
+            />
+            <TextField
+              fullWidth
+              label="About"
+              multiline
+              minRows={3}
+              value={profileData.about}
+              onChange={handleChange("about")}
+              disabled={!editMode}
+            />
+          </Stack>
+        </Grid>
+
+        {/* Actions */}
+        <Grid size={12}>
+          <Stack spacing={2}>
+            {editMode ? (
+              <Stack direction="row" spacing={2} justifyContent="center">
+                <Button
+                  variant="outlined"
+                  onClick={handleCancel}
+                  color="secondary"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleSave}
+                  color="primary"
+                  disabled={!!ageError}
+                >
+                  Save
+                </Button>
+                <Box></Box>
+              </Stack>
+            ) : (
+              <Stack direction="row" spacing={2} justifyContent="center">
+                <Button onClick={() => setEditMode(true)} variant="outlined">
+                  Edit
+                </Button>
+                {/* <Button onClick={confirmPasswordReset} variant="contained">
+                  Reset Password
+                </Button> */}
+                <Button onClick={logout} color="error" variant="outlined">
+                  Logout
+                </Button>
+              </Stack>
+            )}
+          </Stack>
+        </Grid>
+      </Grid>
+    </Stack>
   );
 };
 
-export default Profile;
+export default AnimatedProfileCard;

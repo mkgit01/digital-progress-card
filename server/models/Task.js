@@ -15,6 +15,7 @@ const taskSchema = new mongoose.Schema({
     {
       date: { type: Date, default: Date.now },
       amount: { type: Number, required: false },
+      
     },
   ],
 }, { minimize: false });

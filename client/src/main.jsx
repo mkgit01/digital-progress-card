@@ -19,7 +19,8 @@ import Personalize from "./components/Settings/Personalize";
 import Rewards from "./components/Tasks/Rewards";
 import ContactPage from "./components/Contact/ContactPage";
 import theme from "./utils/theme";
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { GlobalSnackbarProvider } from "./context/GlobalSnackbarProvider";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,8 +43,10 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-       <CssBaseline />
-      <RouterProvider router={router} />
+      <GlobalSnackbarProvider>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </GlobalSnackbarProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

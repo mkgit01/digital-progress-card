@@ -19,7 +19,7 @@ const UserProfile = (props) => {
           
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            console.log("Fetched user data:", userData);  // Log actual data
+            // console.log("Fetched user data:", userData);
             setFullName(userData.name || "FirstName LastName");
             setProfilePic(userData.profilePic || "/media/images/user-profile.png");
           } else {
