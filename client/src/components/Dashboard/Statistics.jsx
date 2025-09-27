@@ -35,7 +35,13 @@ const getProgressData = (task, period) => {
   }
 };
 
-const Statistics = ({ tasks, setTaskId, setRewards, setTotalProgress, setTarget }) => {
+const Statistics = ({
+  tasks,
+  setTaskId,
+  setRewards,
+  setTotalProgress,
+  setTarget,
+}) => {
   const [selectedPeriod, setSelectedPeriod] = useState("weekly");
   const [selectedTask, setSelectedTask] = useState("");
   const [filteredProgress, setFilteredProgress] = useState([]);
@@ -64,7 +70,15 @@ const Statistics = ({ tasks, setTaskId, setRewards, setTotalProgress, setTarget 
         setTotalProgress(response.data.totalProgress);
         setTarget(response.data.target);
 
-        setFilteredProgress(getProgressData(response.data, selectedPeriod));
+        const progressData = getProgressData(response.data, selectedPeriod);
+
+        // If only 1 point, prepend a point at 0 to show line from 0
+        const chartData =
+          progressData.length === 1
+            ? [{ day: "", progress: 0 }, progressData[0]]
+            : progressData;
+
+        setFilteredProgress(chartData);
       } catch (error) {
         console.error("Error fetching task progress:", error);
       }
@@ -110,7 +124,7 @@ const Statistics = ({ tasks, setTaskId, setRewards, setTotalProgress, setTarget 
                       fill="#888"
                       fontSize={16}
                     >
-                      No progress found for this task
+                      No progress found for this period
                     </text>
                   )}
                 </AreaChart>
