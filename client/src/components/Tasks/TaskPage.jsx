@@ -36,6 +36,7 @@ const TaskPage = () => {
     try {
       const data = await getTasks(userId);
       setTasks(data);
+      showSnackbar("Tasks Found", "success");
     } catch (error) {
       showSnackbar(
         error.response?.data?.message || "Failed to load tasks",
