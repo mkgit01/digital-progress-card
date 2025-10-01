@@ -63,7 +63,7 @@ const Statistics = ({
     const fetchTaskProgress = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/${selectedTask}/progress`
+          `https://digital-progress-card.onrender.com/api/${selectedTask}/progress`
         );
         setTaskId(response.data._id);
         setRewards(response.data.rewards);
