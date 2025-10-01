@@ -57,7 +57,7 @@ const Dashboard = () => {
       const token = await user.getIdToken();
 
       const response = await axios.post(
-        `http://localhost:5000/api/${taskId}/progress`,
+        `https://digital-progress-card.onrender.com/api/${taskId}/progress`,
         { value: Number(progressValue), userId },
         {
           headers: {
