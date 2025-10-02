@@ -8,6 +8,7 @@ import { useSnackbar } from "../../context/GlobalSnackbarProvider";
 import useAuth from "../Auth/useAuth";
 import { useEffect } from "react";
 import { getTasks } from "../../services/api";
+import { baseUrl } from "../../config/config";
 
 const Dashboard = () => {
   const [progressValue, setProgressValue] = useState("");
@@ -59,7 +60,7 @@ const Dashboard = () => {
       const userId = user.uid;
       const token = await user.getIdToken();
       const response = await axios.post(
-        `http://localhost:5000/api/${taskId}/progress`,
+        `${baseUrl}/api/${taskId}/progress`,
         { value: Number(progressValue), userId },
         {
           headers: {
