@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
-  Typography,
   TextField,
   MenuItem,
   Button,
@@ -15,11 +14,11 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { createTask } from "../../services/api";
+import { createTask, updateTask } from "../../services/api";
 import useAuth from "../Auth/useAuth";
 import { useSnackbar } from "../../context/GlobalSnackbarProvider";
 
-function CreateTaskDialog({ open, onClose, onTaskCreated }) {
+function CreateTaskDialog({ open, onClose, onTaskCreated, initialData }) {
   const { user } = useAuth();
   const [taskName, setTaskName] = useState("");
   const [target, setTarget] = useState("");
@@ -27,6 +26,22 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
   const [rewards, setRewards] = useState([]);
   const [error, setError] = useState("");
   const { showSnackbar } = useSnackbar();
+
+  // Prefill if editing
+  useEffect(() => {
+    if (initialData) {
+      setTaskName(initialData.name || initialData.title || "");
+      setTarget(initialData.target || "");
+      setUnit(initialData.unit || "");
+      setRewards(initialData.rewards || []);
+    } else {
+      setTaskName("");
+      setTarget("");
+      setUnit("");
+      setRewards([]);
+    }
+    setError("");
+  }, [initialData, open]);
 
   const handleClose = () => {
     setTaskName("");
@@ -49,25 +64,29 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
     };
 
     try {
-      await createTask(taskData);
-      onTaskCreated();
+      if (initialData && initialData._id) {
+        // Update task
+        await updateTask(initialData._id, taskData);
+        showSnackbar("Task Updated Successfully", "success");
+      } else {
+        // Create task
+        await createTask(taskData);
+        showSnackbar("Task Created Successfully", "success");
+      }
+      onTaskCreated(taskData);
       handleClose();
-      showSnackbar("Task Created Successfully", "success");
     } catch (err) {
-      setError("Failed to create task");
-      console.error("Error creating task:", err);
+      setError("Failed to save task");
+      console.error("Error saving task:", err);
     }
   };
 
   const addReward = () => {
     if (rewards.length >= 10) return;
-
     const lastPercent = rewards.length
       ? parseInt(rewards[rewards.length - 1].unit.replace("%", ""), 10)
       : 0;
-
     if (lastPercent >= 100) return;
-
     setRewards([
       ...rewards,
       { unit: "", name: "", minPercent: lastPercent + 1 },
@@ -76,22 +95,18 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
 
   const handleRewardChange = (index, field, value) => {
     const updatedRewards = [...rewards];
-
-    // Validate percent for increasing order
     if (field === "unit") {
       const percentValue = parseInt(value.replace("%", ""), 10);
       const lastPercent =
         index === 0
           ? 0
           : parseInt(updatedRewards[index - 1].unit.replace("%", ""), 10);
-      if (percentValue <= lastPercent) return; // Ignore invalid input
+      if (percentValue <= lastPercent) return;
     }
-
     updatedRewards[index][field] = value;
     setRewards(updatedRewards);
   };
 
-  // Available percentages filtered based on previous reward
   const getAvailablePercents = (index) => {
     const lastPercent =
       index === 0 ? 0 : parseInt(rewards[index - 1].unit.replace("%", ""), 10);
@@ -111,11 +126,11 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Create Task</DialogTitle>
+      <DialogTitle>{initialData ? "Edit Task" : "Create Task"}</DialogTitle>
       <DialogContent dividers>
         <Box component="form" onSubmit={handleTaskSubmit} noValidate>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }}>
+            <Grid size={{xs: 12}}>
               <TextField
                 label="Task Name"
                 variant="outlined"
@@ -126,7 +141,7 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
               />
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{xs: 12, sm: 6}}>
               <TextField
                 label="Target"
                 type="number"
@@ -137,9 +152,8 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
                 required
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
-              {/* <FormControl fullWidth> */}
 
+            <Grid size={{xs: 12, sm: 6}}>
               <FormControl fullWidth>
                 <InputLabel
                   id="unit-label"
@@ -153,9 +167,7 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
                   value={unit}
                   onChange={(e) => setUnit(e.target.value)}
                 >
-                  <MenuItem value="" sx={{ color: "#585858ff" }}>
-                    Select Unit
-                  </MenuItem>
+                  <MenuItem value="">Select Unit</MenuItem>
                   <MenuItem value="kg">Kilogram (kg)</MenuItem>
                   <MenuItem value="g">Gram (g)</MenuItem>
                   <MenuItem value="lb">Pound (lb)</MenuItem>
@@ -187,7 +199,7 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
           <Box mt={2}>
             {rewards.map((reward, index) => (
               <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
-                <Grid size={{ xs: 6 }}>
+                <Grid size={{xs: 6}}>
                   <FormControl fullWidth>
                     <InputLabel sx={{ backgroundColor: "white", px: 1 }}>
                       Percentage
@@ -208,7 +220,7 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid size={{ xs: 6 }}>
+                <Grid size={{xs: 6}}>
                   <TextField
                     label="Reward Name"
                     fullWidth
@@ -236,8 +248,13 @@ function CreateTaskDialog({ open, onClose, onTaskCreated }) {
           <Button onClick={handleClose} variant="outlined" fullWidth>
             Cancel
           </Button>
-          <Button onClick={handleTaskSubmit} variant="contained" fullWidth>
-            Create Task
+          <Button
+            type="submit"
+            onClick={handleTaskSubmit}
+            variant="contained"
+            fullWidth
+          >
+            {initialData ? "Update Task" : "Create Task"}
           </Button>
         </Box>
       </DialogActions>

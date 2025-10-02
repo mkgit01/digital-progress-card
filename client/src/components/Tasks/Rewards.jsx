@@ -10,6 +10,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import axios from "axios";
 import useAuth from "../Auth/useAuth";
+import { baseUrl } from "../../config/config";
 
 // Custom connector to show lines
 const CustomConnector = styled(StepConnector)(({ theme, ownerState }) => ({
@@ -46,7 +47,7 @@ export default function Rewards() {
     const fetchRewards = async () => {
       try {
         const response = await axios.get(
-          `https://digital-progress-card.onrender.com/api/rewards/${user.uid}`
+          `${baseUrl}/api/rewards/${user.uid}`
         );
 
         const tasksData = response.data.map((task) => {

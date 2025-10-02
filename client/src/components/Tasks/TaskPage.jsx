@@ -21,13 +21,14 @@ import {
 import { FilePenLine, Trash2 } from "lucide-react";
 import "../../styles/taskPage.css";
 import CreateTaskDialog from "./CreateTask";
-import { deleteTask, getTasks } from "../../services/api";
+import { deleteTask, getTasks, updateTask } from "../../services/api";
 import useAuth from "../Auth/useAuth";
 import { useSnackbar } from "../../context/GlobalSnackbarProvider";
 
 const TaskPage = () => {
   const [tasks, setTasks] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
   const { user } = useAuth();
   const userId = user ? user.uid : null;
   const { showSnackbar } = useSnackbar();
@@ -36,7 +37,7 @@ const TaskPage = () => {
     try {
       const data = await getTasks(userId);
       setTasks(data);
-      showSnackbar("Tasks Found", "success");
+      // showSnackbar("Tasks Found", "success");
     } catch (error) {
       showSnackbar(
         error.response?.data?.message || "Failed to load tasks",
@@ -50,7 +51,7 @@ const TaskPage = () => {
     if (userId) {
       try {
         fetchUserTasks();
-        showSnackbar("Tasks Found", "success");
+        // showSnackbar("Tasks Found", "success");
       } catch (error) {
         console.log(error);
       }
@@ -58,7 +59,8 @@ const TaskPage = () => {
   }, [userId]);
 
   const handleEditTask = (index) => {
-    return;
+    setEditingTask(tasks[index]);
+    setOpenDialog(true);
   };
 
   const handleDeleteTask = async (index) => {
@@ -85,6 +87,28 @@ const TaskPage = () => {
   const handleTaskCreated = () => {
     fetchUserTasks();
     setOpenDialog(false);
+  };
+
+  const handleTaskSaved = async (taskData) => {
+    try {
+      if (editingTask) {
+        // Update existing
+        const response = await updateTask(editingTask._id, taskData);
+        if (response.status === 200) {
+          await fetchUserTasks();
+          showSnackbar("Task updated successfully", "success");
+        }
+      } else {
+        // Was creating new task
+        await fetchUserTasks();
+        showSnackbar("Task created successfully", "success");
+      }
+    } catch (error) {
+      showSnackbar(error.response?.data?.message || "Save failed", "error");
+    } finally {
+      setEditingTask(null);
+      setOpenDialog(false);
+    }
   };
 
   return (
@@ -167,24 +191,18 @@ const TaskPage = () => {
                           borderBottom: "none",
                         }}
                       >
-                        <Tooltip title="Not Available Right Now">
                           <Button
                             variant="outlined"
                             color="primary"
                             onClick={() => handleEditTask(index)}
-                            // disabled
                             size="small"
                             sx={{
                               textTransform: "none",
                               mr: 1,
-                              color: "grey.400",
-                              borderColor: "grey.400",
-                              cursor: "default",
                             }}
                           >
                             Edit
                           </Button>
-                        </Tooltip>
                         <Button
                           variant="outlined"
                           color="error"
@@ -206,8 +224,12 @@ const TaskPage = () => {
         {/* Dialog to add a new task */}
         <CreateTaskDialog
           open={openDialog}
-          onClose={() => setOpenDialog(false)}
-          onTaskCreated={handleTaskCreated}
+          onClose={() => {
+            setOpenDialog(false);
+            setEditingTask(null);
+          }}
+          onTaskCreated={handleTaskSaved}
+          initialData={editingTask}
         />
       </Box>
     </Container>

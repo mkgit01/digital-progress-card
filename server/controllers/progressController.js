@@ -15,9 +15,9 @@ export const addProgress = async (req, res) => {
     const progressToday = task.progress.find(
       (p) => dayjs(p.date).format("YYYY-MM-DD") === today
     );
-    if (progressToday) {
-      return res.status(400).json({ msg: "Progress already submitted today" });
-    }
+    // if (progressToday) {
+    //   return res.status(400).json({ msg: "Progress already submitted today" });
+    // }
 
     // Calculate total progress so far
     const totalProgress = task.progress.reduce((sum, p) => sum + p.amount, 0);

@@ -19,6 +19,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
+import { baseUrl } from "../../config/config";
 
 // Utility to get correct progress array
 const getProgressData = (task, period) => {
@@ -41,6 +42,7 @@ const Statistics = ({
   setRewards,
   setTotalProgress,
   setTarget,
+  refreshKey,
 }) => {
   const [selectedPeriod, setSelectedPeriod] = useState("weekly");
   const [selectedTask, setSelectedTask] = useState("");
@@ -63,7 +65,7 @@ const Statistics = ({
     const fetchTaskProgress = async () => {
       try {
         const response = await axios.get(
-          `https://digital-progress-card.onrender.com/api/${selectedTask}/progress`
+          `${baseUrl}/api/${selectedTask}/progress`
         );
         setTaskId(response.data._id);
         setRewards(response.data.rewards);
@@ -85,7 +87,7 @@ const Statistics = ({
     };
 
     fetchTaskProgress();
-  }, [selectedTask, selectedPeriod]);
+  }, [selectedTask, selectedPeriod,refreshKey]);
 
   const hasTasks = tasks.length > 0;
 

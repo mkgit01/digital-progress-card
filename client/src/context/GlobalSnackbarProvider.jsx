@@ -30,12 +30,13 @@ export const GlobalSnackbarProvider = ({ children }) => {
         open={snackbar.open}
         autoHideDuration={2500}
         onClose={handleClose}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        sx={{ mt: 7 }}
       >
         <Alert
           onClose={handleClose}
           severity={snackbar.severity}
-          sx={{ width: "100%", mt:7 }}
+          sx={{ width: "100%" }}
         >
           {snackbar.message}
         </Alert>

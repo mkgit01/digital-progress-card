@@ -51,7 +51,7 @@ const Sidebar = ({ user }) => {
       {/* Menu Toggle Button */}
       <IconButton
         onClick={toggleSidebar}
-        sx={{ position: "fixed", top: 10, left: 10, color: "invert.main" }}
+        sx={{ position: "absolute", top: 10, left: 10, color: "invert.main" }}
       >
         <TbLayoutSidebarRightCollapse size={30} />
       </IconButton>

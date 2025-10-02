@@ -20,6 +20,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
   const userId = user ? user.uid : null;
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchUserTasks = async () => {
     try {
@@ -43,6 +44,10 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!progressValue) return;
+    if (progressValue <= 0) {
+      showSnackbar("Please enter a positive progress", "error");
+      return;
+    }
 
     try {
       const user = auth.currentUser;
@@ -51,13 +56,10 @@ const Dashboard = () => {
         return;
       }
 
-      // Firebase UID
       const userId = user.uid;
-
       const token = await user.getIdToken();
-
       const response = await axios.post(
-        `https://digital-progress-card.onrender.com/api/${taskId}/progress`,
+        `http://localhost:5000/api/${taskId}/progress`,
         { value: Number(progressValue), userId },
         {
           headers: {
@@ -67,7 +69,7 @@ const Dashboard = () => {
       );
 
       setProgressValue("");
-      // console.log(response);
+      setRefreshKey((prev) => prev + 1);
       showSnackbar(
         response?.data?.msg || "Progress added successfully",
         "success"
@@ -88,6 +90,7 @@ const Dashboard = () => {
             setRewards={setRewards}
             setTotalProgress={setTotalProgress}
             setTarget={setTarget}
+            refreshKey={refreshKey}
           />
           <Box
             sx={{
