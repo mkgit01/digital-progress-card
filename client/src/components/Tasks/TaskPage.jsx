@@ -24,6 +24,8 @@ import CreateTaskDialog from "./CreateTask";
 import { deleteTask, getTasks, updateTask } from "../../services/api";
 import useAuth from "../Auth/useAuth";
 import { useSnackbar } from "../../context/GlobalSnackbarProvider";
+import { BiEditAlt } from "react-icons/bi";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 const TaskPage = () => {
   const [tasks, setTasks] = useState([]);
@@ -162,21 +164,21 @@ const TaskPage = () => {
                     <TableRow key={index} sx={{ borderBottom: "none" }}>
                       <TableCell sx={{ borderBottom: "none" }}>
                         <Typography
-                          sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
+                          sx={{ fontSize: { xs: 12, sm: 14, md: 16 }}}
                         >
                           {task.title || task.name || "Untitled Task"}
                         </Typography>
                       </TableCell>
                       <TableCell sx={{ borderBottom: "none" }}>
                         <Typography
-                          sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
+                          sx={{ fontSize: { xs: 12, sm: 14, md: 16 }, minWidth: 50 }}
                         >
                           {task.target && task.unit
                             ? `${task.target} ${task.unit}`
                             : "Target not set"}
                         </Typography>
                       </TableCell>
-                      <TableCell sx={{ borderBottom: "none" }}>
+                      <TableCell sx={{ borderBottom: "none", minWidth: 100 }}>
                         <Typography
                           sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
                         >
@@ -187,31 +189,54 @@ const TaskPage = () => {
                       </TableCell>
                       <TableCell
                         sx={{
-                          maxWidth: { xs: "", md: 100 },
                           borderBottom: "none",
+                          minWidth: 120,
+                          textAlign: "right",
                         }}
                       >
-                          <Button
-                            variant="outlined"
-                            color="primary"
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => handleEditTask(index)}
+                          size="small"
+                          sx={{
+                            textTransform: "none",
+                            mr: 1,
+                            display: { xs: "none", md: "inline-flex" },
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Tooltip title="Edit">
+                          <IconButton
                             onClick={() => handleEditTask(index)}
-                            size="small"
-                            sx={{
-                              textTransform: "none",
-                              mr: 1,
-                            }}
+                            sx={{ display: { xs: "inline-flex", md: "none" } }}
+                            color="primary"
                           >
-                            Edit
-                          </Button>
+                            <BiEditAlt />
+                          </IconButton>
+                        </Tooltip>
                         <Button
                           variant="outlined"
                           color="error"
                           onClick={() => handleDeleteTask(index)}
                           size="small"
-                          sx={{ textTransform: "none" }}
+                          sx={{
+                            textTransform: "none",
+                            display: { xs: "none", md: "inline-flex" },
+                          }}
                         >
                           Delete
                         </Button>
+                        <Tooltip title="Delete">
+                          <IconButton
+                            onClick={() => handleDeleteTask(index)}
+                            sx={{ display: { xs: "inline-flex", md: "none" } }}
+                            color="error"
+                          >
+                            <RiDeleteBin5Line />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))}
