@@ -1,116 +1,158 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Typography from "@mui/material/Typography";
+import { Stack, StepConnector, Tooltip } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import axios from "axios";
+import useAuth from "../Auth/useAuth";
+import { baseUrl } from "../../config/config";
 
-const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+// Custom connector to show lines
+const CustomConnector = styled(StepConnector)(({ theme, ownerState }) => ({
+  "& .MuiStepConnector-line": {
+    height: 3,
+    borderRadius: 1,
+    backgroundColor: ownerState.completed ? "#4caf50" : "#bdbdbd", // green if previous step completed
+  },
+}));
+
+// Custom Step Icon to show completed steps in green
+function CustomStepIcon({ completed }) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: completed ? "#4caf50" : "#bdbdbd",
+      }}
+    >
+      {completed ? <CheckCircleIcon /> : <RadioButtonUncheckedIcon />}
+    </Box>
+  );
+}
 
 export default function Rewards() {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+  const [taskRewards, setTaskRewards] = useState([]);
+  const { user } = useAuth();
 
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
+  useEffect(() => {
+    if (!user) return;
 
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
+    const fetchRewards = async () => {
+      try {
+        const response = await axios.get(
+          `${baseUrl}/api/rewards/${user.uid}`
+        );
 
-  const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
+        const tasksData = response.data.map((task) => {
+          const progressPercent = (task.totalProgress / task.target) * 100;
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
+          // Count completed steps
+          let completedSteps = 0;
+          const rewardsWithStatus = task.rewards.map((reward) => {
+            const unitPercent = parseInt(reward.unit);
+            const achieved = progressPercent >= unitPercent;
+            if (achieved) completedSteps++;
+            return { ...reward, achieved };
+          });
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+          return {
+            taskName: task.name,
+            rewards: rewardsWithStatus,
+            activeStep: completedSteps,
+            target: task.target,
+            totalProgress: task.totalProgress,
+          };
+        });
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
+        setTaskRewards(tasksData);
+      } catch (err) {
+        console.error("Error fetching rewards:", err);
+      }
+    };
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+    fetchRewards();
+  }, [user]);
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
-            );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-      {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
+    <Box sx={{ width: "100%", p: 3 }}>
+      {taskRewards.map((task, idx) => (
+        <Box
+          key={idx}
+          sx={{ mb: 4, border: "1px solid #ccc", p: 2, borderRadius: 2 }}
+        >
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            {task.taskName}
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )}
 
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-            </Button>
+          {/* Scrollable Stepper */}
+          <Box sx={{ overflowX: "auto" }}>
+            <Stepper
+              alternativeLabel
+              activeStep={task.activeStep - 1}
+              sx={{
+                display: "flex",
+                flexWrap: "nowrap",
+              }}
+            >
+              {task.rewards.map((reward, index) => (
+                <Step key={index} sx={{ minWidth: 120 }}>
+                  <StepLabel
+                    StepIconComponent={() => (
+                      <CustomStepIcon completed={reward.achieved} />
+                    )}
+                    sx={{
+                      "& .MuiStepConnector-line": {
+                        backgroundColor: reward.achieved
+                          ? "#4caf50"
+                          : "#bdbdbd",
+                      },
+                    }}
+                  >
+                    <Tooltip title={reward.name} arrow>
+                      <span>
+                        {reward.name.length > 10
+                          ? reward.name.slice(0, 10) + "..."
+                          : reward.name}
+                      </span>
+                    </Tooltip>{" "}
+                    ({reward.unit})
+                  </StepLabel>
+
+                  {/* Render connector only for steps AFTER the first step */}
+                  {index > 0 && (
+                    <CustomConnector
+                      ownerState={{ completed: reward.achieved }}
+                    />
+                  )}
+                </Step>
+              ))}
+            </Stepper>
           </Box>
-        </React.Fragment>
-      )}
+
+          <Stack
+            spacing={1}
+            direction={"row"}
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mt: 2 }}
+          >
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              Step {task.activeStep} of {task.rewards.length}
+            </Typography>
+
+            <Typography>
+              Progress: {task.totalProgress} / {task.target}
+            </Typography>
+          </Stack>
+        </Box>
+      ))}
     </Box>
   );
 }
